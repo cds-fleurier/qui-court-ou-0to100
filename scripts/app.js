@@ -4,7 +4,7 @@
    (API_URL dans config.js). Sans API_URL → mode démo (localStorage).
    ──────────────────────────────────────────────────────────────────────────── */
 
-const APP_VERSION = "1.0.2";
+const APP_VERSION = "1.1.0";
 const LS_ME      = "qco_me";
 const LS_FILTER  = "qco_filter";
 const LS_DEMO    = "qco_demo_choices";

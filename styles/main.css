@@ -296,7 +296,7 @@ button { font: inherit; }
 .version { font-size: 10px; letter-spacing: 1px; }
 
 .toast {
-  position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%);
+  position: fixed; left: 50%; bottom: calc(22px + var(--hub-nav-h, 0px)); transform: translateX(-50%);
   background: var(--surface-hi);
   border: 1px solid var(--border-hi);
   color: var(--text);
