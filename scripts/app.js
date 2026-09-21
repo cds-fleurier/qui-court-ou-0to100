@@ -4,7 +4,7 @@
    (API_URL dans config.js). Sans API_URL → mode démo (localStorage).
    ──────────────────────────────────────────────────────────────────────────── */
 
-const APP_VERSION = "1.3.1";
+const APP_VERSION = "1.3.2";
 /* Identité partagée avec le calendrier et la carte (même origine → même localStorage) */
 const LS_ME      = "team_me";
 const LS_ME_OLD  = "qco_me";
@@ -222,7 +222,6 @@ function avatarsRow(people, { max = 8 } = {}) {
 function courseCard(course, blocId, meChoice) {
   const runners = runnersOn(blocId, course.id);
   const isMine = meChoice && meChoice.course === course.id;
-  const validated = isMine && String(meChoice.validated || "").toLowerCase().match(/^(1|true|oui|x|ok|yes|✓)$/);
   const q = encodeURIComponent(`${course.name} trail 2027`);
   const link = course.url
     ? `<a class="clink" href="${esc(course.url)}" target="_blank" rel="noopener">site ↗</a>`
@@ -237,7 +236,7 @@ function courseCard(course, blocId, meChoice) {
     : `<button class="btn" data-act="pick" data-bloc="${blocId}" data-course="${esc(course.id)}" ${state.saving === blocId ? "disabled" : ""}>J'y vais</button>`) : "";
   return `<article class="course ${isMine ? "course--mine" : ""} ${runners.length ? "course--busy" : ""}" id="course-${esc(course.id)}">
     <div class="course-main">
-      <div class="course-title">${trackDots}<span class="cname">${esc(course.name)}</span>${course.dept ? `<span class="cdept">${esc(course.dept)}</span>` : ""}${validated ? `<span class="cvalid" title="Validée par le staff">✓ staff</span>` : ""}</div>
+      <div class="course-title">${trackDots}<span class="cname">${esc(course.name)}</span>${course.dept ? `<span class="cdept">${esc(course.dept)}</span>` : ""}</div>
       <div class="course-meta">${day}<span>${esc(fmtKm(course.km))}</span><span>·</span><span>${esc(fmtDplus(course.dplus))}</span><span>·</span>${link}</div>
       ${avatarsRow(runners)}
       ${!runners.length ? `<div class="runner-names runner-names--none">personne pour l'instant</div>` : ""}
@@ -259,12 +258,14 @@ function otherCards(bloc, meChoice) {
   groups.forEach((g, key) => {
     if (!g.people.length) return;
     const isMine = meChoice && meChoice.course === OTHER_COURSE && normalize(meChoice.note) === key;
+    /* Hors liste : « à valider » tant que le staff n'a pas coché la ligne dans le Sheet */
+    const validated = isMine && /^(1|true|oui|x|ok|yes|✓)$/i.test(String(meChoice.validated || "").trim());
     const action = state.me ? (isMine
       ? `<button class="btn btn--on" data-act="clear" data-bloc="${bloc.id}">J'y vais ✓</button>`
       : `<button class="btn" data-act="pick" data-bloc="${bloc.id}" data-course="${OTHER_COURSE}" data-note="${esc(g.note)}">J'y vais</button>`) : "";
     cards.push(`<article class="course course--other ${isMine ? "course--mine" : ""}">
       <div class="course-main">
-        <div class="course-title"><span class="cname">${esc(g.note)}</span><span class="cdept cdept--warn">hors liste · à valider</span></div>
+        <div class="course-title"><span class="cname">${esc(g.note)}</span>${validated ? `<span class="cvalid">✓ validée par le staff</span>` : `<span class="cdept cdept--warn">hors liste · à valider</span>`}</div>
         ${avatarsRow(g.people.sort((a, b) => a.name.localeCompare(b.name, "fr")))}
       </div>
       <div class="course-side">${action}</div>

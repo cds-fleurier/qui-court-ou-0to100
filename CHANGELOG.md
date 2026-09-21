@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.3.2 — 21 septembre 2026
+- Une course de la liste est validée par définition (badge « ✓ staff » retiré) ; une « autre course » affiche « ✓ validée par le staff » une fois cochée dans le Sheet.
+
 ## 1.3.1 — 21 septembre 2026
 - Cache des derniers choix connus (`qco_choices_cache`) : si le Sheet est injoignable, on affiche le cache avec la mention « hors ligne » au lieu d'un tableau vide.
 
