@@ -4,8 +4,10 @@
    (API_URL dans config.js). Sans API_URL → mode démo (localStorage).
    ──────────────────────────────────────────────────────────────────────────── */
 
-const APP_VERSION = "1.1.0";
-const LS_ME      = "qco_me";
+const APP_VERSION = "1.2.0";
+/* Identité partagée avec le calendrier et la carte (même origine → même localStorage) */
+const LS_ME      = "team_me";
+const LS_ME_OLD  = "qco_me";
 const LS_FILTER  = "qco_filter";
 const LS_DEMO    = "qco_demo_choices";
 
@@ -366,8 +368,9 @@ function bind() {
 
 /* ─── Init ─────────────────────────────────────────────────────────────────── */
 (async function init() {
-  state.me = localStorage.getItem(LS_ME) || null;
+  state.me = localStorage.getItem(LS_ME) || localStorage.getItem(LS_ME_OLD) || null;
   if (state.me && !byId[state.me]) state.me = null;
+  if (state.me) { localStorage.setItem(LS_ME, state.me); localStorage.removeItem(LS_ME_OLD); }
   state.filter = localStorage.getItem(LS_FILTER) || "all";
   if (!["all", "100", "40"].includes(state.filter)) state.filter = "all";
   $("#version").textContent = `v${APP_VERSION}`;

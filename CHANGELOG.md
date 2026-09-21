@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.2.0 — 21 septembre 2026
+- Identité partagée avec le calendrier et la carte : clé localStorage `team_me` (migration depuis `qco_me`). Le calendrier affiche désormais les courses choisies ici.
+
 ## 1.1.0 — 21 septembre 2026
 - Barre d'onglets partagée de la team (hub `0to100-hub/nav.js`) : Calendrier · Carte · Qui court où · Séances, en bas d'écran. Toast remonté au-dessus de la barre.
 
