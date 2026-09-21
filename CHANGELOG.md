@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.1 — 21 septembre 2026
+- Backend branché : Google Sheet « Qui court ou » + Apps Script (API_URL), fin du mode démo.
+
 ## 1.0.0 — 21 septembre 2026
 - Première version : 4 blocs (Noël, mars, fin mai/juin, début juillet), 42 courses
   autorisées 0 to 100 (liste staff du 21/09), sélection « J'y vais », « Autre course »

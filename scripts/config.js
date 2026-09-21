@@ -4,7 +4,7 @@
 
 /* URL du Web App Google Apps Script (backend/Code.gs déployé en « Application web »).
    Vide → mode démo : les choix restent dans le localStorage du téléphone. */
-const API_URL = "";
+const API_URL = "https://script.google.com/macros/s/AKfycbwS1c6LgGqqLaanrQvfPyprFUqocJZlvQG0sDPcZbSrqKRtCY8FmhBBWgBUd0diy5n3/exec";
 
 /* Les photos vivent dans le repo de la carte participants (pas de doublon). */
 const PHOTO_BASE = "https://cds-fleurier.github.io/carte-participants-0to100/";
