@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.2 — 21 septembre 2026
+- Roster : ajout de William (0 to 100), synchro depuis la carte.
+
 ## 1.0.1 — 21 septembre 2026
 - Backend branché : Google Sheet « Qui court ou » + Apps Script (API_URL), fin du mode démo.
 
