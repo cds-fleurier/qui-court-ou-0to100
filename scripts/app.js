@@ -4,12 +4,13 @@
    (API_URL dans config.js). Sans API_URL → mode démo (localStorage).
    ──────────────────────────────────────────────────────────────────────────── */
 
-const APP_VERSION = "1.3.0";
+const APP_VERSION = "1.3.1";
 /* Identité partagée avec le calendrier et la carte (même origine → même localStorage) */
 const LS_ME      = "team_me";
 const LS_ME_OLD  = "qco_me";
 const LS_FILTER  = "qco_filter";
 const LS_DEMO    = "qco_demo_choices";
+const LS_CACHE   = "qco_choices_cache";   // derniers choix connus, pour l'affichage hors ligne
 
 const $  = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
@@ -23,7 +24,8 @@ const state = {
   saving: null,        // bloc en cours d'enregistrement
   otherOpen: {},       // bloc → true quand le champ « autre course » est ouvert
   guestOpen: false,    // formulaire « je ne suis pas dans la liste » ouvert
-  lastSync: null
+  lastSync: null,
+  offline: false       // vrai si le dernier chargement a échoué (on affiche le cache)
 };
 
 const PARTICIPANTS = (window.PARTICIPANTS || []).slice().sort((a, b) => a.name.localeCompare(b.name, "fr"));
@@ -113,9 +115,16 @@ async function loadChoices({ silent = false } = {}) {
     if (!data.ok) throw new Error(data.error || "réponse invalide");
     state.choices = data.choices || [];
     state.lastSync = new Date();
+    state.offline = false;
+    try { localStorage.setItem(LS_CACHE, JSON.stringify({ at: Date.now(), choices: state.choices })); } catch { /* plein */ }
   } catch (err) {
     console.error(err);
-    if (!silent) toast("Impossible de charger les choix — réessaie dans un instant.", "err");
+    state.offline = true;
+    try {
+      const cached = JSON.parse(localStorage.getItem(LS_CACHE) || "null");
+      if (cached && Array.isArray(cached.choices)) { state.choices = cached.choices; state.lastSync = new Date(cached.at); }
+    } catch { /* pas de cache */ }
+    if (!silent) toast("Connexion impossible — affichage des derniers choix connus.", "err");
   } finally {
     state.loading = false;
   }
@@ -319,7 +328,7 @@ function renderBlocs() {
 
 function renderCount() {
   const total = PARTICIPANTS.filter(isVisible).length;
-  const sync = state.lastSync ? ` · maj ${state.lastSync.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}` : "";
+  const sync = state.lastSync ? ` · ${state.offline ? "hors ligne, vu à" : "maj"} ${state.lastSync.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}` : "";
   $("#count").textContent = `${total} coureur${total > 1 ? "s" : ""}${state.loading ? " · chargement…" : sync}`;
 }
 

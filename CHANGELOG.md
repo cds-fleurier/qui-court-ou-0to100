@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.3.1 — 21 septembre 2026
+- Cache des derniers choix connus (`qco_choices_cache`) : si le Sheet est injoignable, on affiche le cache avec la mention « hors ligne » au lieu d'un tableau vide.
+
 ## 1.3.0 — 21 septembre 2026
 - Mode invité : « Je ne suis pas dans la liste… » → prénom + parcours, id `guest|<100|40>|<Prénom>` (même convention que le calendrier), avatar initiales, visible par tous.
 

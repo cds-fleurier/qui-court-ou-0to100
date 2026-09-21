@@ -52,6 +52,12 @@ Après une modification de `Code.gs` : **Déployer → Gérer les déploiements 
 - La colonne `validated` est réinitialisée automatiquement si le participant change de course.
 - L'onglet `journal` garde l'historique complet (qui a changé quoi, quand).
 
+## Invité qui entre ensuite dans le trombinoscope
+
+Ses choix sont enregistrés sous l'id `guest|<100|40>|<Prénom>`. Une fois la personne ajoutée
+à `participants.js` (carte), remplacer cet id par le nouvel `id` dans la colonne `participant`
+de l'onglet `choix` (et lui dire de se re-sélectionner dans « C'est moi »).
+
 ## Limites connues
 
 - Pas d'authentification : n'importe qui ayant l'URL peut enregistrer un choix au nom
