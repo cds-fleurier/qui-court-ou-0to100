@@ -32,6 +32,18 @@
           <option value="">— choisis ton prénom —</option>
         </select>
       </div>
+      <form id="guest-form" class="guest-form" hidden>
+        <p class="me-hint">Pas dans le trombinoscope ? Pas grave — dis-nous qui tu es :</p>
+        <div class="guest-row">
+          <input type="text" name="name" maxlength="30" placeholder="Ton prénom" required autocomplete="given-name" />
+          <select name="group" required>
+            <option value="100">0 to 100</option>
+            <option value="40">0 to 40</option>
+          </select>
+          <button class="btn" type="submit">C'est moi</button>
+          <button class="btn btn--ghost" type="button" id="guest-cancel">Annuler</button>
+        </div>
+      </form>
       <div id="me-summary" class="me-summary" hidden></div>
       <p class="me-hint" id="me-hint">Choisis ton prénom pour indiquer tes courses. Tout le monde voit tout, c'est le but.</p>
     </section>

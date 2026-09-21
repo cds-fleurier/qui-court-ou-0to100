@@ -4,7 +4,7 @@
    (API_URL dans config.js). Sans API_URL → mode démo (localStorage).
    ──────────────────────────────────────────────────────────────────────────── */
 
-const APP_VERSION = "1.2.0";
+const APP_VERSION = "1.3.0";
 /* Identité partagée avec le calendrier et la carte (même origine → même localStorage) */
 const LS_ME      = "team_me";
 const LS_ME_OLD  = "qco_me";
@@ -22,12 +22,25 @@ const state = {
   loading: false,
   saving: null,        // bloc en cours d'enregistrement
   otherOpen: {},       // bloc → true quand le champ « autre course » est ouvert
+  guestOpen: false,    // formulaire « je ne suis pas dans la liste » ouvert
   lastSync: null
 };
 
 const PARTICIPANTS = (window.PARTICIPANTS || []).slice().sort((a, b) => a.name.localeCompare(b.name, "fr"));
 const COURSES = window.COURSES || [];
 const byId = Object.fromEntries(PARTICIPANTS.map(p => [p.id, p]));
+
+/* Invités (pas dans le trombinoscope) : id "guest|<100|40>|<Prénom>", même convention que
+   le calendrier. On les reconstitue à la volée depuis l'id, sans photo. */
+const GUEST_PREFIX = "guest|";
+function guestId(group, name) { return GUEST_PREFIX + group + "|" + name.trim(); }
+function guestFromId(id) {
+  if (typeof id !== "string" || !id.startsWith(GUEST_PREFIX)) return null;
+  const [, group, name] = id.split("|");
+  if (!name || !["100", "40"].includes(group)) return null;
+  return { id, name, group, photo: "", guest: true };
+}
+function person(id) { return byId[id] || guestFromId(id); }
 const courseById = Object.fromEntries(COURSES.map(c => [c.id, c]));
 const DEMO = !API_URL;
 
@@ -77,7 +90,7 @@ function runnersOn(blocId, courseId, note) {
   const key = normalize(note);
   return state.choices
     .filter(c => c.bloc === blocId && c.course === courseId && (courseId !== OTHER_COURSE || normalize(c.note) === key))
-    .map(c => byId[c.participant]).filter(Boolean)
+    .map(c => person(c.participant)).filter(Boolean)
     .filter(isVisible)
     .sort((a, b) => a.name.localeCompare(b.name, "fr"));
 }
@@ -150,19 +163,24 @@ function renderMeSelect() {
   const sel = $("#me-select");
   const groups = { "100": [], "40": [] };
   PARTICIPANTS.forEach(p => (groups[p.group] || groups["100"]).push(p));
+  const guest = guestFromId(state.me);
   sel.innerHTML = `<option value="">— choisis ton prénom —</option>` +
     [["100", "0 to 100"], ["40", "0 to 40"]].map(([g, label]) =>
       `<optgroup label="${label}">` +
       groups[g].map(p => `<option value="${esc(p.id)}">${esc(p.name)}</option>`).join("") +
-      `</optgroup>`).join("");
+      `</optgroup>`).join("") +
+    (guest ? `<option value="${esc(guest.id)}">${esc(guest.name)} (invité)</option>` : "") +
+    `<option value="__other">Je ne suis pas dans la liste…</option>`;
   sel.value = state.me || "";
 }
 
 function renderMeSummary() {
   const box = $("#me-summary");
   const hint = $("#me-hint");
-  const me = state.me && byId[state.me];
-  if (!me) { box.hidden = true; hint.hidden = false; return; }
+  const me = state.me && person(state.me);
+  const guestForm = $("#guest-form");
+  if (guestForm) guestForm.hidden = !state.guestOpen;
+  if (!me) { box.hidden = true; hint.hidden = state.guestOpen; return; }
   hint.hidden = true;
   box.hidden = false;
   const chips = BLOCS.map(b => {
@@ -177,7 +195,7 @@ function renderMeSummary() {
   }).join("");
   const done = BLOCS.filter(b => choiceOf(me.id, b.id)).length;
   box.innerHTML = `
-    <div class="me-head">${avatar(me, "lg")}<div><div class="me-name">${esc(me.name)}</div><div class="me-track chip chip--${me.group}">0 to ${me.group}</div></div>
+    <div class="me-head">${avatar(me, "lg")}<div><div class="me-name">${esc(me.name)}${me.guest ? ' <span class="chip">invité</span>' : ""}</div><div class="me-track chip chip--${me.group}">0 to ${me.group}</div></div>
       <div class="me-progress">${done}/${BLOCS.length} <small>courses choisies</small></div></div>
     <div class="me-chips">${chips}</div>`;
 }
@@ -203,7 +221,7 @@ function courseCard(course, blocId, meChoice) {
   const trackDots = course.tracks.map(t => `<i class="dot dot--${t}" title="0 to ${t}"></i>`).join("");
   const day = course.date ? `<span class="cday">${esc(fmtDay(course.date))}</span>` : "";
   // Bouton uniquement si la course est autorisée pour MON parcours
-  const me = state.me && byId[state.me];
+  const me = state.me && person(state.me);
   const allowed = me && course.tracks.includes(me.group);
   const action = allowed ? (isMine
     ? `<button class="btn btn--on" data-act="clear" data-bloc="${blocId}" ${state.saving === blocId ? "disabled" : ""}>J'y vais ✓</button>`
@@ -225,7 +243,7 @@ function otherCards(bloc, meChoice) {
   state.choices.filter(c => c.bloc === bloc.id && c.course === OTHER_COURSE).forEach(c => {
     const key = normalize(c.note) || "(sans nom)";
     if (!groups.has(key)) groups.set(key, { note: c.note || "Autre course", people: [] });
-    const p = byId[c.participant];
+    const p = person(c.participant);
     if (p && isVisible(p)) groups.get(key).people.push(p);
   });
   const cards = [];
@@ -261,7 +279,7 @@ function otherForm(bloc, meChoice) {
 }
 
 function renderBlocs() {
-  const me = state.me && byId[state.me];
+  const me = state.me && person(state.me);
   const tracks = visibleTracks();
   $("#blocs").innerHTML = BLOCS.map(bloc => {
     const meChoice = me ? choiceOf(me.id, bloc.id) : null;
@@ -326,11 +344,34 @@ function render() {
 /* ─── Événements ───────────────────────────────────────────────────────────── */
 function bind() {
   $("#me-select").addEventListener("change", e => {
+    if (e.target.value === "__other") {
+      state.guestOpen = true;
+      render();
+      $("#guest-form input[name=name]")?.focus();
+      return;
+    }
+    state.guestOpen = false;
     state.me = e.target.value || null;
     if (state.me) localStorage.setItem(LS_ME, state.me); else localStorage.removeItem(LS_ME);
     state.otherOpen = {};
     render();
   });
+
+  $("#guest-form")?.addEventListener("submit", e => {
+    e.preventDefault();
+    const f = e.target;
+    const name = f.name.value.trim().replace(/\|/g, " ").slice(0, 30);
+    const group = f.group.value;
+    if (!name || !["100", "40"].includes(group)) return;
+    state.me = guestId(group, name);
+    localStorage.setItem(LS_ME, state.me);
+    state.guestOpen = false;
+    state.otherOpen = {};
+    renderMeSelect();
+    render();
+    toast(`Bienvenue ${name} ! Tes choix sont visibles par toute la team.`);
+  });
+  $("#guest-cancel")?.addEventListener("click", () => { state.guestOpen = false; renderMeSelect(); render(); });
 
   $$(".seg").forEach(btn => btn.addEventListener("click", () => {
     state.filter = btn.dataset.filter;
@@ -369,7 +410,7 @@ function bind() {
 /* ─── Init ─────────────────────────────────────────────────────────────────── */
 (async function init() {
   state.me = localStorage.getItem(LS_ME) || localStorage.getItem(LS_ME_OLD) || null;
-  if (state.me && !byId[state.me]) state.me = null;
+  if (state.me && !person(state.me)) state.me = null;
   if (state.me) { localStorage.setItem(LS_ME, state.me); localStorage.removeItem(LS_ME_OLD); }
   state.filter = localStorage.getItem(LS_FILTER) || "all";
   if (!["all", "100", "40"].includes(state.filter)) state.filter = "all";

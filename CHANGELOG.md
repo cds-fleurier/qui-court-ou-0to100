@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.3.0 — 21 septembre 2026
+- Mode invité : « Je ne suis pas dans la liste… » → prénom + parcours, id `guest|<100|40>|<Prénom>` (même convention que le calendrier), avatar initiales, visible par tous.
+
 ## 1.2.0 — 21 septembre 2026
 - Identité partagée avec le calendrier et la carte : clé localStorage `team_me` (migration depuis `qco_me`). Le calendrier affiche désormais les courses choisies ici.
 

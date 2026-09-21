@@ -12,7 +12,7 @@ Fait partie de l'écosystème team UTMB avec le
 
 ## Fonctionnement
 
-1. Je choisis mon prénom (mémorisé sur le téléphone).
+1. Je choisis mon prénom (mémorisé sur le téléphone, clé `team_me` partagée avec le calendrier et la carte). Pas dans le trombinoscope → « Je ne suis pas dans la liste… » (prénom + parcours, id `guest|<100|40>|<Prénom>`).
 2. Dans chaque bloc, « J'y vais » sur une course de la liste — ou « Autre course » (hors
    liste, à faire valider par le staff).
 3. Tout le monde voit tout, tout de suite (rafraîchi au retour sur l'onglet et toutes les 90 s).
