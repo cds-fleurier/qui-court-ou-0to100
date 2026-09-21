@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>0 to 40 &amp; 100 — Qui court où ?</title>
+  <meta name="description" content="Les courses de préparation de la team 0 to 100 & 0 to 40 : qui va courir où, pour ne pas courir seul." />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#07090e" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles/main.css" />
+</head>
+<body>
+  <div class="app-shell">
+
+    <header class="hero">
+      <h1 class="brand">0 <span class="brand-to">to</span> <span class="brand-40">40</span> <span class="brand-amp">&amp;</span> <span class="brand-100">100</span></h1>
+      <p class="tagline">Qui court où ?</p>
+      <p class="hero-sub">Les courses de préparation validées par le staff, et qui y va — pour ne pas courir seul.</p>
+    </header>
+
+    <div id="banner" class="banner" hidden></div>
+
+    <!-- Identité -->
+    <section class="card me-card">
+      <div class="me-row">
+        <label class="me-label" for="me-select">C'est moi</label>
+        <select id="me-select" class="me-select">
+          <option value="">— choisis ton prénom —</option>
+        </select>
+      </div>
+      <div id="me-summary" class="me-summary" hidden></div>
+      <p class="me-hint" id="me-hint">Choisis ton prénom pour indiquer tes courses. Tout le monde voit tout, c'est le but.</p>
+    </section>
+
+    <!-- Filtres -->
+    <div class="toolbar">
+      <div class="segmented" role="tablist" aria-label="Filtrer par projet">
+        <button class="seg is-active" data-filter="all">Tous</button>
+        <button class="seg" data-filter="100"><i class="dot dot--100"></i>0 to 100</button>
+        <button class="seg" data-filter="40"><i class="dot dot--40"></i>0 to 40</button>
+      </div>
+      <p class="count" id="count"></p>
+    </div>
+
+    <!-- Les 4 blocs -->
+    <main id="blocs" class="blocs" aria-live="polite"></main>
+
+    <footer class="foot">
+      <p>Liste des courses validée par le staff · contraintes de distance par parcours.<br />
+      Une course hors liste ? Choisis « Autre course », le staff validera.</p>
+      <p class="foot-links">
+        <a href="https://cds-fleurier.github.io/calendar-0-to-100-app/">Calendrier</a> ·
+        <a href="https://cds-fleurier.github.io/carte-participants-0to100/">La carte</a>
+      </p>
+      <p class="version" id="version"></p>
+    </footer>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="scripts/config.js"></script>
+  <script src="data/participants.js"></script>
+  <script src="data/courses.js"></script>
+  <script src="scripts/app.js"></script>
+</body>
+</html>
