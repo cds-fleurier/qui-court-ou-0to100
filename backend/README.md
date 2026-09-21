@@ -22,6 +22,20 @@ de compte Google — l'app web appelle l'URL du script en anonyme.
 
 Test rapide : ouvrir l'URL `/exec` dans un navigateur → `{"ok":true,"choices":[],…}`.
 
+## Limiter le script à cette seule feuille (fait le 21/09/2026)
+
+Par défaut `SpreadsheetApp` réclame l'accès à *toutes* les feuilles du compte. Le manifeste
+`appsscript.json` (⚙️ Paramètres → « Afficher le fichier manifeste ») force un scope réduit :
+
+```json
+"oauthScopes": ["https://www.googleapis.com/auth/spreadsheets.currentonly"]
+```
+
+Après modification : enregistrer, relancer `setup`, puis publier une **nouvelle version** du
+déploiement. Si une autorisation large avait déjà été accordée, la révoquer dans
+https://myaccount.google.com/connections puis relancer `setup` pour ré-autoriser avec le
+scope réduit (la Web App est indisponible entre les deux).
+
 ## Mise à jour du script
 
 Après une modification de `Code.gs` : **Déployer → Gérer les déploiements →
