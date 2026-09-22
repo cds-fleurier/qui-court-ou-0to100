@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.4.2 — 22 septembre 2026
+- Trail des Citadelles : relais à 2 sur le 40 km → tronçon 27 km (0 to 100, id inchangé) + nouveau tronçon 15 km (0 to 40, première course 0 to 40 de la liste). Ouverture du 40 km : dim. 8 nov. 15h.
+
 ## 1.4.0 — 22 septembre 2026
 - **Inscriptions** : relevé des 42 courses (site officiel, date 2027 quand confirmée, état ou date
   d'ouverture des inscriptions) → `url` + `signup` dans `data/courses.js`, ligne 📝 sur chaque carte

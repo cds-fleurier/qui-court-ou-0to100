@@ -69,8 +69,11 @@ window.COURSES = [
     url: "https://www.skiclubduplateaudenozeroy.com/", signup: { note: "2027 non annoncé — 2026 : dim. 29/03, ouverture ≈ janv. (njuko)" } },
   { id: "trail-du-sanglier",         bloc: "mars", weekend: "2027-03-27", name: "Trail du Sanglier",         dept: "69", km: 28, dplus: 1200, tracks: ["100"],
     url: "https://traildusanglier.com/", signup: { note: "2027 non annoncé — 2026 : dim. 29/03, 25 €, ouverture ≈ déc. (yaka)" } },
-  { id: "trail-des-citadelles-relais", bloc: "mars", weekend: "2027-03-27", date: "2027-03-28", name: "Trail des Citadelles – Relais", dept: "09", km: 27, dplus: 1200, tracks: ["100"],
-    url: "http://trail-des-citadelles.blogspot.com/", signup: { open: "2026-11-01", note: "26 km : dim. 1er nov. 17h (10 km à 15h) · 40 km : 8 nov. 15h · 58 km : 8 nov. 17h — ⚠️ complet en quelques heures, être devant l'écran à l'heure" } },
+  /* Relais à 2 sur le 40 km : tronçon 27 km (0 to 100) + tronçon 15 km (0 to 40) — Alice × Mims */
+  { id: "trail-des-citadelles-relais", bloc: "mars", weekend: "2027-03-27", date: "2027-03-28", name: "Trail des Citadelles – Relais 40 km, tronçon 27 km", dept: "09", km: 27, dplus: 1200, tracks: ["100"],
+    url: "http://trail-des-citadelles.blogspot.com/", signup: { open: "2026-11-08", note: "40 km (relais) : dim. 8 nov. 15h — ⚠️ complet en quelques heures, être devant l'écran à l'heure (26 km solo : 1er nov. 17h)" } },
+  { id: "trail-des-citadelles-relais-15", bloc: "mars", weekend: "2027-03-27", date: "2027-03-28", name: "Trail des Citadelles – Relais 40 km, tronçon 15 km", dept: "09", km: 15, dplus: null, tracks: ["40"],
+    url: "http://trail-des-citadelles.blogspot.com/", signup: { open: "2026-11-08", note: "40 km (relais) : dim. 8 nov. 15h — ⚠️ complet en quelques heures ; l'inscription du relais se fait en binôme" } },
 
   /* ─── Fin mai · début juin · 40 km max ────────────────────────────────── */
   { id: "maxi-race",                 bloc: "juin", weekend: "2027-05-29", name: "MaXi-Race",                 dept: "74", km: 42, dplus: 1800, tracks: ["100"],

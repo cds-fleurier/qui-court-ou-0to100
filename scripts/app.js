@@ -4,7 +4,7 @@
    (API_URL dans config.js). Sans API_URL → mode démo (localStorage).
    ──────────────────────────────────────────────────────────────────────────── */
 
-const APP_VERSION = "1.4.1";
+const APP_VERSION = "1.4.2";
 /* Identité partagée avec le calendrier et la carte (même origine → même localStorage) */
 const LS_ME      = "team_me";
 const LS_ME_OLD  = "qco_me";
@@ -65,7 +65,7 @@ function avatar(p, size = "") {
     : `<span class="${cls}" title="${esc(p.name)}">${esc(initials(p.name))}</span>`;
 }
 function fmtKm(v) { return typeof v === "number" ? String(v).replace(".", ",") + " km" : v; }
-function fmtDplus(v) { return typeof v === "number" ? v.toLocaleString("fr-FR") + " m D+" : v; }
+function fmtDplus(v) { return typeof v === "number" ? v.toLocaleString("fr-FR") + " m D+" : (v || "D+ à préciser"); }
 /* Ligne « inscriptions » d'une course : ouverture datée (avec J-n), déjà ouvertes, ou note libre */
 function signupInfo(course) {
   const sg = course.signup;
