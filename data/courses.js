@@ -13,8 +13,9 @@
      km, dplus: distance / dénivelé (nombres)
      tracks   : parcours autorisés → ["100"], ["40"] ou ["100", "40"]
      url      : site officiel / page d'inscription
-     signup   : { open: "AAAA-MM-JJ" (date d'ouverture connue), status: "open" (déjà
-                ouvertes), note: texte libre } — relevé du 22/09/2026, voir
+     signup   : { open: "AAAA-MM-JJ" (date d'ouverture connue), close: "AAAA-MM-JJ"
+                (fin de la fenêtre, optionnel), status: "open" (déjà ouvertes),
+                note: texte libre } — relevé du 22/09/2026, voir
                 docs/inscriptions_releve_2026-09-22.md
 
    ⏳ Liste 0 to 40 : à venir (communiquée par le staff le 22/09/2026).
@@ -77,7 +78,7 @@ window.COURSES = [
 
   /* ─── Fin mai · début juin · 40 km max ────────────────────────────────── */
   { id: "maxi-race",                 bloc: "juin", weekend: "2027-05-29", name: "MaXi-Race",                 dept: "74", km: 42, dplus: 1800, tracks: ["100"],
-    url: "https://www.maxi-race.org/en/inscriptions/", signup: { open: "2026-10-01", note: "pré-inscriptions du 1er au 7 oct. 2026 (10h → 18h), puis tirage au sort 8–10 oct., liste d'attente dès le 13" } },
+    url: "https://www.maxi-race.org/en/inscriptions/", signup: { open: "2026-10-01", close: "2026-10-07", note: "pré-inscriptions du 1er au 7 oct. 2026 (10h → 18h), puis tirage au sort 8–10 oct., liste d'attente dès le 13" } },
   { id: "cascades-de-l-alloix",      bloc: "juin", weekend: "2027-05-29", name: "Course des Cascades de l'Alloix", dept: "38", km: 35, dplus: 2000, tracks: ["100"],
     url: "https://coursedescascades.fr/", signup: { note: "⚠️ édition 2027 incertaine — site officiel en maintenance, aucune annonce (club CSVM 07 68 28 18 18)" } },
   { id: "alvitrail",                 bloc: "juin", weekend: "2027-05-29", name: "Alvitrail",                 dept: "46", km: 33, dplus: 1450, tracks: ["100"],

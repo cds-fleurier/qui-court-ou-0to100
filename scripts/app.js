@@ -4,7 +4,7 @@
    (API_URL dans config.js). Sans API_URL → mode démo (localStorage).
    ──────────────────────────────────────────────────────────────────────────── */
 
-const APP_VERSION = "1.4.2";
+const APP_VERSION = "1.4.3";
 /* Identité partagée avec le calendrier et la carte (même origine → même localStorage) */
 const LS_ME      = "team_me";
 const LS_ME_OLD  = "qco_me";
@@ -25,7 +25,8 @@ const state = {
   otherOpen: {},       // bloc → true quand le champ « autre course » est ouvert
   guestOpen: false,    // formulaire « je ne suis pas dans la liste » ouvert
   lastSync: null,
-  offline: false       // vrai si le dernier chargement a échoué (on affiche le cache)
+  offline: false,      // vrai si le dernier chargement a échoué (on affiche le cache)
+  savedAt: 0           // horodatage du dernier enregistrement (pour ignorer un chargement périmé)
 };
 
 const PARTICIPANTS = (window.PARTICIPANTS || []).slice().sort((a, b) => a.name.localeCompare(b.name, "fr"));
@@ -71,13 +72,18 @@ function signupInfo(course) {
   const sg = course.signup;
   if (!sg) return null;
   const today = new Date(); today.setHours(0, 0, 0, 0);
+  const fmt = d => d.toLocaleDateString("fr-FR", { weekday: "short", day: "numeric", month: "short" });
+  if (sg.close && new Date(sg.close + "T00:00:00") < today) {
+    return { cls: "", text: `Inscriptions closes depuis le ${fmt(new Date(sg.close + "T00:00:00"))}`, note: sg.note };
+  }
   if (sg.open) {
     const d = new Date(sg.open + "T00:00:00");
     const days = Math.round((d - today) / 86400000);
-    const when = d.toLocaleDateString("fr-FR", { weekday: "short", day: "numeric", month: "short" });
+    const when = fmt(d);
     if (days > 0) return { cls: days <= 21 ? "soon" : "", text: `Inscriptions : ouverture ${when} · J-${days}`, note: sg.note };
     if (days === 0) return { cls: "soon", text: "Inscriptions : ouverture AUJOURD'HUI", note: sg.note };
-    return { cls: "open", text: `Inscriptions ouvertes depuis le ${when}`, note: sg.note };
+    const until = sg.close ? ` (jusqu'au ${fmt(new Date(sg.close + "T00:00:00"))})` : "";
+    return { cls: "open", text: `Inscriptions ouvertes depuis le ${when}${until}`, note: sg.note };
   }
   if (sg.status === "open") return { cls: "open", text: "Inscriptions ouvertes", note: sg.note };
   return { cls: "", text: sg.note || "", note: null };
@@ -126,10 +132,13 @@ async function loadChoices({ silent = false } = {}) {
   }
   state.loading = !silent;
   if (!silent) render();
+  const startedAt = Date.now();
   try {
     const res = await fetch(API_URL, { cache: "no-store" });
     const data = await res.json();
     if (!data.ok) throw new Error(data.error || "réponse invalide");
+    // Un « J'y vais » est parti pendant ce chargement : sa réponse fait foi, pas celle-ci
+    if (state.savedAt > startedAt) return;
     state.choices = data.choices || [];
     state.lastSync = new Date();
     state.offline = false;
@@ -156,6 +165,7 @@ async function saveChoice(blocId, courseId, note = "") {
   state.choices = before.filter(c => !(c.participant === state.me && c.bloc === blocId));
   if (courseId) state.choices.push({ ...payload, updated_at: new Date().toISOString(), validated: "" });
   state.saving = blocId;
+  state.savedAt = Date.now();
   state.otherOpen[blocId] = false;
   render();
 
@@ -327,7 +337,7 @@ function renderBlocs() {
     }).join("");
 
     const empty = !courses.length
-      ? `<p class="empty">${state.filter === "40" ? "La liste 0 to 40 arrive — le staff la communique cette semaine." : "Aucune course dans ce bloc."}</p>`
+      ? `<p class="empty">${state.filter === "40" ? "La liste 0 to 40 arrive — en attendant, « Autre course » ci-dessous." : "Aucune course dans ce bloc."}</p>`
       : "";
 
     const meClear = meChoice ? `<button class="btn btn--ghost btn--sm" data-act="clear" data-bloc="${bloc.id}">Je ne sais plus / retirer mon choix</button>` : "";
@@ -430,13 +440,20 @@ function bind() {
     saveChoice(form.dataset.bloc, OTHER_COURSE, note);
   });
 
-  // Rafraîchissement : au retour sur l'onglet + périodique quand visible
-  document.addEventListener("visibilitychange", async () => {
-    if (document.visibilityState === "visible") { await loadChoices({ silent: true }); render(); }
-  });
-  setInterval(async () => {
-    if (document.visibilityState === "visible" && !state.saving) { await loadChoices({ silent: true }); render(); }
-  }, REFRESH_MS);
+  // Rafraîchissement : au retour sur l'onglet + périodique quand visible.
+  // Jamais pendant un enregistrement, et on ne redessine pas si quelqu'un est en train de
+  // taper dans un formulaire de la page (le rendu reconstruit tout le DOM des blocs).
+  function typing() {
+    const el = document.activeElement;
+    return !!(el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA") && el.closest("#blocs, #guest-form"));
+  }
+  async function refresh() {
+    if (document.visibilityState !== "visible" || state.saving) return;
+    await loadChoices({ silent: true });
+    if (!state.saving && !typing()) render();
+  }
+  document.addEventListener("visibilitychange", refresh);
+  setInterval(refresh, REFRESH_MS);
 }
 
 /* ─── Init ─────────────────────────────────────────────────────────────────── */
