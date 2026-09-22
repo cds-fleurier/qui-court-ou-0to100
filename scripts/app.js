@@ -4,7 +4,7 @@
    (API_URL dans config.js). Sans API_URL → mode démo (localStorage).
    ──────────────────────────────────────────────────────────────────────────── */
 
-const APP_VERSION = "1.4.0";
+const APP_VERSION = "1.4.1";
 /* Identité partagée avec le calendrier et la carte (même origine → même localStorage) */
 const LS_ME      = "team_me";
 const LS_ME_OLD  = "qco_me";
