@@ -4,7 +4,7 @@
    (API_URL dans config.js). Sans API_URL → mode démo (localStorage).
    ──────────────────────────────────────────────────────────────────────────── */
 
-const APP_VERSION = "1.4.3";
+const APP_VERSION = "1.4.4";
 /* Identité partagée avec le calendrier et la carte (même origine → même localStorage) */
 const LS_ME      = "team_me";
 const LS_ME_OLD  = "qco_me";
@@ -54,9 +54,11 @@ function esc(s) {
 function initials(name) {
   return name.split(/[\s-]+/).map(w => w[0]).join("").slice(0, 2).toUpperCase();
 }
+/* Miniature 320 px générée côté carte (assets/photos/thumb/<nom>.jpeg) — 25 Ko au lieu de 2 Mo */
 function photoUrl(p) {
   if (!p.photo) return "";
-  return /^https?:/.test(p.photo) ? p.photo : PHOTO_BASE + p.photo;
+  if (/^https?:/.test(p.photo)) return p.photo;
+  return PHOTO_BASE + p.photo.replace(/^(.*\/)([^/]+)\.[a-z]+$/i, "$1thumb/$2.jpeg");
 }
 function avatar(p, size = "") {
   const cls = `ava ava--${p.group}${size ? " ava--" + size : ""}`;

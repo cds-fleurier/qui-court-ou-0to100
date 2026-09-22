@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.4.4 — 22 septembre 2026
+- Avatars servis en miniatures 320 px (générées côté carte) au lieu des photos originales de 2 Mo.
+
 ## 1.4.3 — 22 septembre 2026 (relecture)
 - Le roster est chargé depuis la carte (comme le calendrier) : plus de copie locale de `participants.js` à synchroniser.
 - Fix : le rafraîchissement automatique ne redessine plus la page pendant qu'on tape une
