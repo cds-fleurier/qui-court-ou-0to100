@@ -232,6 +232,11 @@ button { font: inherit; }
 .clink--soft { color: var(--text-muted); font-weight: 400; }
 .clink:hover { text-decoration: underline; }
 
+.csignup { font-size: 12px; color: var(--text-soft); line-height: 1.4; }
+.csignup--soon { color: #ffd79a; font-weight: 600; }
+.csignup--open { color: #bff5d6; font-weight: 600; }
+.csignup-note { font-weight: 400; color: var(--text-soft); }
+
 .runners { display: flex; align-items: center; gap: 8px; margin-top: 3px; min-width: 0; }
 .ava-stack { display: flex; flex: none; }
 .ava-stack .ava { margin-left: -8px; }

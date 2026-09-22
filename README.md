@@ -36,7 +36,9 @@ backend/README.md        déploiement du script
 ## Maintenance
 
 - **Nouvelle course / liste 0 to 40** : éditer `data/courses.js` (id unique, ne jamais
-  renommer un id déjà choisi par quelqu'un), commit, push.
+  renommer un id déjà choisi par quelqu'un), commit, push. Champs `url` + `signup`
+  (`open` = date d'ouverture connue, `status: "open"` = déjà ouvertes, `note` libre) : relevé
+  dans `docs/inscriptions_releve_2026-09-22.md`, à rafraîchir quand les organisateurs annoncent 2027.
 - **Nouveau participant** : recopier `participants.js` depuis le repo de la carte
   (les photos sont chargées depuis le GitHub Pages de la carte, rien à copier ici).
 - **Validation staff** : cocher `validated` dans l'onglet `choix` du Sheet.

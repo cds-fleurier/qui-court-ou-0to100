@@ -4,7 +4,7 @@
    (API_URL dans config.js). Sans API_URL → mode démo (localStorage).
    ──────────────────────────────────────────────────────────────────────────── */
 
-const APP_VERSION = "1.3.3";
+const APP_VERSION = "1.4.0";
 /* Identité partagée avec le calendrier et la carte (même origine → même localStorage) */
 const LS_ME      = "team_me";
 const LS_ME_OLD  = "qco_me";
@@ -66,6 +66,23 @@ function avatar(p, size = "") {
 }
 function fmtKm(v) { return typeof v === "number" ? String(v).replace(".", ",") + " km" : v; }
 function fmtDplus(v) { return typeof v === "number" ? v.toLocaleString("fr-FR") + " m D+" : v; }
+/* Ligne « inscriptions » d'une course : ouverture datée (avec J-n), déjà ouvertes, ou note libre */
+function signupInfo(course) {
+  const sg = course.signup;
+  if (!sg) return null;
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  if (sg.open) {
+    const d = new Date(sg.open + "T00:00:00");
+    const days = Math.round((d - today) / 86400000);
+    const when = d.toLocaleDateString("fr-FR", { weekday: "short", day: "numeric", month: "short" });
+    if (days > 0) return { cls: days <= 21 ? "soon" : "", text: `Inscriptions : ouverture ${when} · J-${days}`, note: sg.note };
+    if (days === 0) return { cls: "soon", text: "Inscriptions : ouverture AUJOURD'HUI", note: sg.note };
+    return { cls: "open", text: `Inscriptions ouvertes depuis le ${when}`, note: sg.note };
+  }
+  if (sg.status === "open") return { cls: "open", text: "Inscriptions ouvertes", note: sg.note };
+  return { cls: "", text: sg.note || "", note: null };
+}
+
 function fmtDay(iso) {
   const d = new Date(iso + "T12:00:00");
   return d.toLocaleDateString("fr-FR", { weekday: "short", day: "numeric", month: "short" });
@@ -227,6 +244,10 @@ function courseCard(course, blocId, meChoice) {
     ? `<a class="clink" href="${esc(course.url)}" target="_blank" rel="noopener">site ↗</a>`
     : `<a class="clink clink--soft" href="https://www.google.com/search?q=${q}" target="_blank" rel="noopener">chercher ↗</a>`;
   const trackDots = course.tracks.map(t => `<i class="dot dot--${t}" title="0 to ${t}"></i>`).join("");
+  const sg = signupInfo(course);
+  const signupLine = sg && sg.text
+    ? `<div class="csignup csignup--${sg.cls}" ${sg.note ? `title="${esc(sg.note)}"` : ""}>📝 ${esc(sg.text)}${sg.note && sg.cls ? ` <span class="csignup-note">— ${esc(sg.note)}</span>` : ""}</div>`
+    : "";
   const day = course.date ? `<span class="cday">${esc(fmtDay(course.date))}</span>` : "";
   // Bouton uniquement si la course est autorisée pour MON parcours
   const me = state.me && person(state.me);
@@ -238,6 +259,7 @@ function courseCard(course, blocId, meChoice) {
     <div class="course-main">
       <div class="course-title">${trackDots}<span class="cname">${esc(course.name)}</span>${course.dept ? `<span class="cdept">${esc(course.dept)}</span>` : ""}</div>
       <div class="course-meta">${day}<span>${esc(fmtKm(course.km))}</span><span>·</span><span>${esc(fmtDplus(course.dplus))}</span><span>·</span>${link}</div>
+      ${signupLine}
       ${avatarsRow(runners)}
       ${!runners.length ? `<div class="runner-names runner-names--none">personne pour l'instant</div>` : ""}
     </div>

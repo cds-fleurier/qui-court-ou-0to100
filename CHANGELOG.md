@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.4.0 — 22 septembre 2026
+- **Inscriptions** : relevé des 42 courses (site officiel, date 2027 quand confirmée, état ou date
+  d'ouverture des inscriptions) → `url` + `signup` dans `data/courses.js`, ligne 📝 sur chaque carte
+  avec compte à rebours J-n quand l'ouverture est datée (orange si ≤ 21 jours, vert si ouvertes).
+  Relevé complet : `docs/inscriptions_releve_2026-09-22.md`.
+- Dates précises ajoutées quand confirmées (Montée de Chambles et Guigne le dim. 27/12, Citadelles
+  dim. 28/03, Balcons de la Sure et Cagire dim. 6/06…). Trail des Grottes déplacé sur le WE 27–28 mars.
+
 ## 1.3.3 — 22 septembre 2026
 - Trail Hyèges Verdon déplacé du bloc fin mai/juin au bloc début juillet (édition 2026 le dim. 5 juillet — merci Myriam).
 
