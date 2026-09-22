@@ -27,7 +27,6 @@ index.html
 styles/main.css          thème « Dark Altitude » (mêmes tokens que la carte)
 scripts/config.js        API_URL, BLOCS (4 blocs, contraintes km), PHOTO_BASE
 scripts/app.js           logique (état, rendu, appels backend)
-data/participants.js     roster — COPIE de carte-participants-0to100/data/participants.js
 data/courses.js          liste des courses autorisées (staff) — LA donnée à maintenir
 backend/Code.gs          Apps Script (GET/POST JSON sur le Sheet)
 backend/README.md        déploiement du script
@@ -39,8 +38,8 @@ backend/README.md        déploiement du script
   renommer un id déjà choisi par quelqu'un), commit, push. Champs `url` + `signup`
   (`open` = date d'ouverture connue, `status: "open"` = déjà ouvertes, `note` libre) : relevé
   dans `docs/inscriptions_releve_2026-09-22.md`, à rafraîchir quand les organisateurs annoncent 2027.
-- **Nouveau participant** : recopier `participants.js` depuis le repo de la carte
-  (les photos sont chargées depuis le GitHub Pages de la carte, rien à copier ici).
+- **Nouveau participant** : l'ajouter dans le repo de la carte, c'est tout — le roster et les
+  photos sont chargés depuis le GitHub Pages de la carte (`participants.js`), rien ici.
 - **Validation staff** : cocher `validated` dans l'onglet `choix` du Sheet.
 - Bumper `APP_VERSION` (app.js) + `CHANGELOG.md` à chaque push.
 

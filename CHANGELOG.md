@@ -1,6 +1,7 @@
 # Changelog
 
 ## 1.4.3 — 22 septembre 2026 (relecture)
+- Le roster est chargé depuis la carte (comme le calendrier) : plus de copie locale de `participants.js` à synchroniser.
 - Fix : le rafraîchissement automatique ne redessine plus la page pendant qu'on tape une
   « autre course » (le texte était perdu), ni pendant un enregistrement.
 - Fix : un chargement parti avant un « J'y vais » ne peut plus écraser le choix à l'écran.
