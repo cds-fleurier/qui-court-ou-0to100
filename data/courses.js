@@ -60,12 +60,13 @@ window.COURSES = [
   { id: "trail-du-cagire",           bloc: "juin", weekend: "2027-06-05", name: "Trail du Cagire",           dept: "31", km: 29, dplus: 1900, tracks: ["100"] },
   { id: "trail-des-millefonts",      bloc: "juin", weekend: "2027-06-05", name: "Trail des Millefonts",      dept: "06", km: 31, dplus: 2250, tracks: ["100"] },
   { id: "montan-aspe",               bloc: "juin", weekend: "2027-06-05", name: "Montan'Aspe",               dept: "64", km: 37, dplus: 2700, tracks: ["100"] },
-  { id: "trail-hyeges-verdon",       bloc: "juin", weekend: "2027-06-05", name: "Trail Hyèges Verdon",       dept: "04", km: 45, dplus: 2300, tracks: ["100"] },
   { id: "transju-trails",            bloc: "juin", weekend: "2027-06-05", name: "La Transju'Trails",         dept: "39", km: 42, dplus: 2200, tracks: ["100"] },
 
   /* ─── Début juillet · 40–50 km ────────────────────────────────────────── */
   { id: "chalmatrail",               bloc: "juillet", weekend: "2027-07-03", name: "Chalmatrail",            dept: "42", km: 45, dplus: 1840, tracks: ["100"] },
   { id: "trail-des-bauges",          bloc: "juillet", weekend: "2027-07-03", name: "Trail des Bauges",       dept: "73", km: 48, dplus: 2750, tracks: ["100"] },
   { id: "grand-raid-guillestrois-queyras", bloc: "juillet", weekend: "2027-07-03", name: "Grand Raid Guillestrois-Queyras", dept: "05", km: 48, dplus: 3200, tracks: ["100"] },
-  { id: "tour-glaciers-vanoise",     bloc: "juillet", weekend: "2027-07-03", name: "Tour des Glaciers de la Vanoise", dept: "73", km: 41, dplus: 2850, tracks: ["100"] }
+  { id: "tour-glaciers-vanoise",     bloc: "juillet", weekend: "2027-07-03", name: "Tour des Glaciers de la Vanoise", dept: "73", km: 41, dplus: 2850, tracks: ["100"] },
+  /* Déplacée de « juin » → « juillet » le 22/09/2026 (signalé par Myriam) : l'édition 2026 a eu lieu le dim. 5 juillet */
+  { id: "trail-hyeges-verdon",       bloc: "juillet", weekend: "2027-07-03", name: "Trail Hyèges Verdon",       dept: "04", km: 45, dplus: 2300, tracks: ["100"] }
 ];

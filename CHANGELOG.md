@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.3.3 — 22 septembre 2026
+- Trail Hyèges Verdon déplacé du bloc fin mai/juin au bloc début juillet (édition 2026 le dim. 5 juillet — merci Myriam).
+
 ## 1.3.2 — 21 septembre 2026
 - Une course de la liste est validée par définition (badge « ✓ staff » retiré) ; une « autre course » affiche « ✓ validée par le staff » une fois cochée dans le Sheet.
 
