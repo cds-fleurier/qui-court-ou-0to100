@@ -95,6 +95,8 @@ window.COURSES = [
     url: "https://ententeouestlyonnais.athle.org/", signup: { note: "Les Sauvages (près de Tarare), sam. 29/05/2027 — 2026 : départ 16h ; contact trail.eolienne@gmail.com" } },
   { id: "maxi-race",                 bloc: "juin", weekend: "2027-05-29", name: "MaXi-Race",                 dept: "74", km: 42, dplus: 1800, tracks: ["100"],
     url: "https://www.maxi-race.org/en/inscriptions/", signup: { open: "2026-10-01", close: "2026-10-07", note: "pré-inscriptions du 1er au 7 oct. 2026 (10h → 18h), puis tirage au sort 8–10 oct., liste d'attente dès le 13" } },
+  { id: "maxi-race-quart-de-tour",   bloc: "juin", weekend: "2027-05-29", date: "2027-05-29", name: "MaXi-Race – Quart de tOur du Lac", dept: "74", km: 20, dplus: 410, tracks: ["40"],
+    url: "https://www.maxi-race.org/fr/quart-de-tour/", signup: { open: "2026-10-01", close: "2026-10-02", note: "trail « négatif » Semnoz → Annecy (410 D+ / 1450 D−), sam. 29/05 9h ; pré-inscriptions 1er–2 oct. 2026 puis tirage au sort 3–4 oct. → clos, liste d'attente annoncée" } },
   { id: "cascades-de-l-alloix",      bloc: "juin", weekend: "2027-05-29", name: "Course des Cascades de l'Alloix", dept: "38", km: 35, dplus: 2000, tracks: ["100"],
     url: "https://coursedescascades.fr/", signup: { note: "⚠️ édition 2027 incertaine — site de nouveau en ligne mais aucune info 2027 (club CSVM 07 68 28 18 18)" } },
   { id: "alvitrail",                 bloc: "juin", weekend: "2027-05-29", name: "Alvitrail",                 dept: "46", km: 33, dplus: 1450, tracks: ["100"],

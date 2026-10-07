@@ -33,7 +33,7 @@ const BLOCS = [
       { id: "2027-05-29", label: "29–30 mai 2027" },
       { id: "2027-06-05", label: "5–6 juin 2027" }
     ],
-    km: { "100": "40 km max", "40": "20 km max" }
+    km: { "100": "40 km max", "40": "20–25 km" }
   },
   {
     id: "juillet", label: "Début juillet", emoji: "🏔️",

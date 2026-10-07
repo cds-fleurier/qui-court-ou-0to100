@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.3 — 7 octobre 2026
+- **0 to 40 : MaXi-Race – Quart de tOur du Lac** validé (sam. 29/05/2027, ~20 km / 410 D+ / 1450 D−, trail en descente Semnoz → Annecy). Pré-inscriptions du 1er au 2 oct. 2026 puis tirage au sort : affichée « inscriptions closes », liste d'attente annoncée par l'organisation.
+- Bloc fin mai · début juin, 0 to 40 : libellé « 20 km max » → « 20–25 km » (Ambertrail 21, Éolienne 23, Franchevill 25 km).
+
 ## 1.5.2 — 7 octobre 2026
 - Correction : Traversée des Dentelles **pas encore ouverte**. Le lien « Inscriptions 2027 » du site officiel mène à une liste d'attente sur Finishers, pas à l'inscription.
 - Orthographe : Trail Blanc du **Gaschney** (l'id `trail-blanc-gashney` ne change pas, il est stocké dans le Sheet).
