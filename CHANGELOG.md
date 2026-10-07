@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.5.0 — 7 octobre 2026
+- **Liste 0 to 40 validée par le staff** (tableau « proche de Saint-Étienne », D+ du staff) — 12 cartes + relais Citadelles 15 km :
+  - Noël : Montée de Chambles 11 km / 300 D+ (même course que le 0 to 100, ouverte aux deux parcours ; D+ corrigé 250 → 300) ;
+  - 20–21 mars : Trail Retournacois 10 km / 360 D+ ou 15 km / 700 D+ ;
+  - 27–28 mars : Trail des Jonquilles (Tence) 10 km / 200 D+ ou 15 km / 280 D+ ;
+  - 29–30 mai : Run Écully 20 km / 400 D+, Trail de l'Éolienne (Les Sauvages) 23 km / 940 D+, Ambertrail (63) 21 km « Tour de Saint-Ferréol » / 700 D+ ;
+  - 5–6 juin : Franchevill'Trail 25 km / 530 D+ ;
+  - 3–4 juillet : Courir pour des Mômes (Graix) 20 km / 700 D+, Chalmatrail 20 km / 720 D+, Tour des Glaciers de la Vanoise 25 km « Pralo vu du Ciel » / 1750 D+.
+  Une carte par format ; les formats courts de courses déjà listées en 0 to 100 ont leur propre id, les ids existants ne bougent pas.
+- Plus de message « La liste 0 to 40 arrive ».
+- Cache : `?v=<version>` sur le style et les scripts dans `index.html`.
+
 ## 1.4.4 — 22 septembre 2026
 - Avatars servis en miniatures 320 px (générées côté carte) au lieu des photos originales de 2 Mo.
 

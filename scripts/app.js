@@ -4,7 +4,7 @@
    (API_URL dans config.js). Sans API_URL → mode démo (localStorage).
    ──────────────────────────────────────────────────────────────────────────── */
 
-const APP_VERSION = "1.4.4";
+const APP_VERSION = "1.5.0";
 /* Identité partagée avec le calendrier et la carte (même origine → même localStorage) */
 const LS_ME      = "team_me";
 const LS_ME_OLD  = "qco_me";
@@ -339,7 +339,7 @@ function renderBlocs() {
     }).join("");
 
     const empty = !courses.length
-      ? `<p class="empty">${state.filter === "40" ? "La liste 0 to 40 arrive — en attendant, « Autre course » ci-dessous." : "Aucune course dans ce bloc."}</p>`
+      ? `<p class="empty">Aucune course dans ce bloc.</p>`
       : "";
 
     const meClear = meChoice ? `<button class="btn btn--ghost btn--sm" data-act="clear" data-bloc="${bloc.id}">Je ne sais plus / retirer mon choix</button>` : "";

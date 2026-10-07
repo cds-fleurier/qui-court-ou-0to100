@@ -38,6 +38,9 @@ backend/README.md        déploiement du script
   renommer un id déjà choisi par quelqu'un), commit, push. Champs `url` + `signup`
   (`open` = date d'ouverture connue, `status: "open"` = déjà ouvertes, `note` libre) : relevé
   dans `docs/inscriptions_releve_2026-09-22.md`, à rafraîchir quand les organisateurs annoncent 2027.
+- **À chaque version** : bumper `APP_VERSION` (`scripts/app.js`) **et** les `?v=` de `index.html`
+  (style + 3 scripts) — sinon les téléphones gardent jusqu'à 10 min l'ancien `courses.js` en cache
+  (GitHub Pages sert `max-age=600`).
 - **Nouveau participant** : l'ajouter dans le repo de la carte, c'est tout — le roster et les
   photos sont chargés depuis le GitHub Pages de la carte (`participants.js`), rien ici.
 - **Validation staff** : cocher `validated` dans l'onglet `choix` du Sheet.
