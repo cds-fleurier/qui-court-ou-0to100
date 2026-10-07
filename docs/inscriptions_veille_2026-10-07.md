@@ -8,8 +8,8 @@ n'ont pas été lues.
 
 | Course | Changement | Source |
 |---|---|---|
-| Trail Blanc du Gashney | **inscriptions ouvertes** (sporkrono), sam. 19/12/2026 | site officiel |
-| Traversée des Dentelles | **inscriptions 2027 ouvertes** (Finishers), 5–6/06/2027 | site officiel |
+| Trail Blanc du Gaschney | **inscriptions ouvertes** (sporkrono), sam. 19/12/2026 | site officiel |
+| Traversée des Dentelles | 5–6/06/2027 confirmé — ⚠️ **pas ouvertes** : le lien « Inscriptions 2027 » du site mène à une **liste d'attente** Finishers (corrigé en v1.5.2 après vérification par l'utilisateur) | site officiel + Finishers |
 | Trail des Marcaires | **déplacée du WE 29–30 mai au WE 5–6 juin** : dim. 6/06/2027 (aucun inscrit au moment du déplacement) | site officiel (les agrégateurs disent encore 30/05) |
 | Balcons de la Sure | dim. 6/06/2027 confirmé | site officiel |
 | Trail du Cagire | dim. 6/06/2027 confirmé (14e édition) | site officiel |

@@ -29,7 +29,7 @@ window.COURSES = [
   /* ─── Noël · 10–15 km ─────────────────────────────────────────────────── */
   { id: "corrida-trail-ambarroise",  bloc: "noel", weekend: "2026-12-19", name: "Corrida-Trail Ambarroise",  dept: "01", km: 10, dplus: 450, tracks: ["100"],
     url: "https://www.facebook.com/corridatrailambarroise/", signup: { note: "2026 non annoncé — 2025 : dim. 21/12, inscriptions ouvertes en nov. (njuko)" } },
-  { id: "trail-blanc-gashney",       bloc: "noel", weekend: "2026-12-19", name: "Trail Blanc du Gashney",    dept: "68", km: 14, dplus: 650, tracks: ["100"],
+  { id: "trail-blanc-gashney",       bloc: "noel", weekend: "2026-12-19", name: "Trail Blanc du Gaschney",   dept: "68", km: 14, dplus: 650, tracks: ["100"],
     url: "https://www.sporkrono.fr/courses/1767212816/trail-blanc-du-gaschney/", signup: { status: "open", note: "sam. 19/12/2026 (11e édition) — ouvertes sur sporkrono depuis début oct. ; neige non garantie" } },
   { id: "14-18-noctrail",            bloc: "noel", weekend: "2026-12-19", name: "La 14-18 Noctrail",         dept: "60", km: 15, dplus: 400, tracks: ["100"],
     url: "https://www.la-1418.com/noctrail/", signup: { status: "open", note: "1 000 places, sur adeorun" } },
@@ -113,7 +113,7 @@ window.COURSES = [
   { id: "balcons-du-verdon",         bloc: "juin", weekend: "2027-06-05", name: "Balcons du Verdon",         dept: "04", km: 40, dplus: 1900, tracks: ["100"],
     url: "https://varverdontrailcanyon.com/en/register-for-a-race/", signup: { open: "2026-10-15", note: "ouverture le 15 octobre 2026 (Var Verdon Trail Canyon)" } },
   { id: "traversee-des-dentelles",   bloc: "juin", weekend: "2027-06-05", name: "Traversée des Dentelles",   dept: "84", km: 42, dplus: 2000, tracks: ["100"],
-    url: "https://www.finishers.com/course/traversee-des-dentelles-gigondas", signup: { status: "open", note: "39e édition 5–6/06/2027 au départ de Gigondas — inscriptions 2027 ouvertes sur Finishers, places limitées" } },
+    url: "https://www.finishers.com/course/traversee-des-dentelles-gigondas", signup: { note: "39e édition 5–6/06/2027 au départ de Gigondas — pas encore ouvertes : liste d'attente sur Finishers (07/10), places limitées" } },
   { id: "trail-du-cagire",           bloc: "juin", weekend: "2027-06-05", date: "2027-06-06", name: "Trail du Cagire",           dept: "31", km: 29, dplus: 1900, tracks: ["100"],
     url: "https://www.lesgalopinsducagire.fr/le-trail-du-cagire/", signup: { note: "dim. 6/06/2027 confirmé (14e édition) — 34 €, départ 8h, « infos et inscriptions bientôt »" } },
   { id: "trail-des-millefonts",      bloc: "juin", weekend: "2027-06-05", name: "Trail des Millefonts",      dept: "06", km: 31, dplus: 2250, tracks: ["100"],

@@ -1,8 +1,12 @@
 # Changelog
 
+## 1.5.2 — 7 octobre 2026
+- Correction : Traversée des Dentelles **pas encore ouverte**. Le lien « Inscriptions 2027 » du site officiel mène à une liste d'attente sur Finishers, pas à l'inscription.
+- Orthographe : Trail Blanc du **Gaschney** (l'id `trail-blanc-gashney` ne change pas, il est stocké dans le Sheet).
+
 ## 1.5.1 — 7 octobre 2026
 - **Veille inscriptions** sur les 44 courses sans date d'ouverture connue → `docs/inscriptions_veille_2026-10-07.md`.
-  - **Ouvertes** : Trail Blanc du Gashney (sporkrono), Traversée des Dentelles 2027 (Finishers).
+  - **Ouvertes** : Trail Blanc du Gaschney (sporkrono). ~~Traversée des Dentelles~~ : erreur, corrigée en 1.5.2.
   - **Trail des Marcaires déplacé au WE 5–6 juin** (dim. 6/06/2027 selon le site officiel).
   - Dates 2027 confirmées : Balcons de la Sure et Trail du Cagire (6/06). Notes mises à jour : Guillestrois-Queyras, Volta al Terme, Cascades de l'Alloix.
   - Trail des Jonquilles : lien corrigé (GoTrail renvoyait vers un événement belge).
