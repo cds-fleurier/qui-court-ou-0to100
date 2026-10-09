@@ -124,6 +124,8 @@ window.COURSES = [
     url: "https://www.trail-montanaspe.com/", signup: { note: "Défi de l'Ourdinse — 2027 non annoncé, 2026 : ven. 5/06, ouverture ≈ janv. (njuko)" } },
   { id: "transju-trails",            bloc: "juin", weekend: "2027-06-05", name: "La Transju'Trails",         dept: "39", km: 42, dplus: 2200, tracks: ["100"],
     url: "https://www.latransju.com/en/evenements/la-transju-trail/", signup: { open: "2026-10-08", note: "ouverture jeudi 8 octobre 2026 à 12h — tarifs préférentiels jusqu'à fin mars" } },
+  { id: "transju-trails-15",         bloc: "juin", weekend: "2027-06-05", date: "2027-06-06", name: "La Transju'Trails – 15 km", dept: "39", km: 15, dplus: 870, tracks: ["40"],
+    url: "https://in.njuko.com/taktiksport-transjutrail2027", signup: { open: "2026-10-08", note: "dim. 6/06/2027, boucle au départ des Tuffes (Les Rousses) — njuko, tarifs préférentiels jusqu'à fin mars" } },
   { id: "ambertrail-21",             bloc: "juin", weekend: "2027-05-29", name: "Ambertrail – 21 km « Tour de Saint-Ferréol »", dept: "63", km: 21, dplus: 700, tracks: ["40"],
     url: "https://www.ambertrail.fr", signup: { note: "date 2027 à confirmer — 2026 : dim. 31/05, départ 9h30 gare de Marsac-en-Livradois, arrivée Ambert" } },
   { id: "franchevill-trail-25",      bloc: "juin", weekend: "2027-06-05", name: "Franchevill'Trail – Trail du Fort 25 km", dept: "69", km: 25, dplus: 530, tracks: ["40"],

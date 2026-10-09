@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.4 — 9 octobre 2026
+- **0 to 40 : La Transju'Trails – 15 km** (dim. 6/06/2027, 870 D+, boucle au départ des Tuffes, Les Rousses). Inscriptions ouvertes depuis le 8 oct. sur njuko (annonce officielle).
+- Pauline l'avait saisie en « autre » (« Trans ju trail (39) 15km ») → basculée sur `transju-trails-15` après mise en ligne.
+
 ## 1.5.3 — 7 octobre 2026
 - **0 to 40 : MaXi-Race – Quart de tOur du Lac** validé (sam. 29/05/2027, ~20 km / 410 D+ / 1450 D−, trail en descente Semnoz → Annecy). Pré-inscriptions du 1er au 2 oct. 2026 puis tirage au sort : affichée « inscriptions closes », liste d'attente annoncée par l'organisation.
 - Bloc fin mai · début juin, 0 to 40 : libellé « 20 km max » → « 20–25 km » (Ambertrail 21, Éolienne 23, Franchevill 25 km).
