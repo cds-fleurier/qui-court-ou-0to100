@@ -6,7 +6,8 @@
                 dans le Sheet des choix, NE PAS LE RENOMMER une fois en prod
      bloc     : "noel" | "mars" | "juin" | "juillet" (cf. BLOCS dans config.js)
      weekend  : id du week-end dans le bloc (samedi, AAAA-MM-JJ)
-     name     : nom de la course
+     name     : nom de la course (« Nom – format » : le format s'affiche en sous-titre, sans la distance)
+     format   : sous-titre imposé (optionnel), quand le découpage automatique du nom ne convient pas
      dept     : département (ou pays)
      date     : jour précis (AAAA-MM-JJ, optionnel) si la course n'est pas
                 le samedi — ex. EcoTrail 22 km le dimanche
@@ -14,8 +15,10 @@
      tracks   : parcours autorisés → ["100"], ["40"] ou ["100", "40"]
      url      : site officiel / page d'inscription
      signup   : { open: "AAAA-MM-JJ" (date d'ouverture connue), close: "AAAA-MM-JJ"
-                (fin de la fenêtre, optionnel), status: "open" (déjà ouvertes),
-                note: texte libre } — relevé du 22/09/2026, voir
+                (fin de la fenêtre, optionnel), status: "open" (déjà ouvertes) | "waitlist",
+                waitlist: true (fenêtre close → liste d'attente),
+                expect: "≈ janv." (ouverture estimée, courte : pastille),
+                note: texte libre (affiché dans l'accordéon « infos ») } — relevé du 22/09/2026, voir
                 docs/inscriptions_releve_2026-09-22.md
 
    Liste 0 to 40 (« proche de Saint-Étienne ») : tableau du staff reçu le 07/10/2026,
@@ -28,31 +31,31 @@
 window.COURSES = [
   /* ─── Noël · 10–15 km ─────────────────────────────────────────────────── */
   { id: "corrida-trail-ambarroise",  bloc: "noel", weekend: "2026-12-19", name: "Corrida-Trail Ambarroise",  dept: "01", km: 10, dplus: 450, tracks: ["100"],
-    url: "https://www.facebook.com/corridatrailambarroise/", signup: { note: "2026 non annoncé — 2025 : dim. 21/12, inscriptions ouvertes en nov. (njuko)" } },
+    url: "https://www.facebook.com/corridatrailambarroise/", signup: { expect: "≈ nov.", note: "2026 non annoncé — 2025 : dim. 21/12, inscriptions ouvertes en nov. (njuko)" } },
   { id: "trail-blanc-gashney",       bloc: "noel", weekend: "2026-12-19", name: "Trail Blanc du Gaschney",   dept: "68", km: 14, dplus: 650, tracks: ["100"],
     url: "https://www.sporkrono.fr/courses/1767212816/trail-blanc-du-gaschney/", signup: { status: "open", note: "sam. 19/12/2026 (11e édition) — ouvertes sur sporkrono depuis début oct. ; neige non garantie" } },
   { id: "14-18-noctrail",            bloc: "noel", weekend: "2026-12-19", name: "La 14-18 Noctrail",         dept: "60", km: 15, dplus: 400, tracks: ["100"],
     url: "https://www.la-1418.com/noctrail/", signup: { status: "open", note: "1 000 places, sur adeorun" } },
   { id: "trail-de-noel-70",          bloc: "noel", weekend: "2026-12-19", name: "Trail de Noël",             dept: "70", km: 15, dplus: 280, tracks: ["100"],
-    url: "https://dampierre-sur-linotte.fr/traildenoel", signup: { note: "2026 non annoncé — 2025 : dim. 21/12, ouverture en nov." } },
+    url: "https://dampierre-sur-linotte.fr/traildenoel", signup: { expect: "≈ nov.", note: "2026 non annoncé — 2025 : dim. 21/12, ouverture en nov." } },
   { id: "nocturne-du-coeur",         bloc: "noel", weekend: "2026-12-19", name: "La Nocturne du Cœur",       dept: "31", km: 15, dplus: 300, tracks: ["100"],
-    url: "https://trailducassoulet.fr/lanocturneducoeur.html", signup: { note: "pas encore ouvertes — 2025 : ouverture oct./nov. sur chrono-start (Téléthon)" } },
+    url: "https://trailducassoulet.fr/lanocturneducoeur.html", signup: { expect: "≈ oct./nov.", note: "pas encore ouvertes — 2025 : ouverture oct./nov. sur chrono-start (Téléthon)" } },
   { id: "nuit-des-fadarelles",       bloc: "noel", weekend: "2026-12-19", name: "La Nuit des Fadarelles",    dept: "48", km: 12, dplus: 410, tracks: ["100"],
-    url: "https://www.triathlonlangognenaussac.fr/?page_id=2306", signup: { note: "ouverture non annoncée (≈ nov.), 15 €" } },
+    url: "https://www.triathlonlangognenaussac.fr/?page_id=2306", signup: { expect: "≈ nov.", note: "ouverture non annoncée (≈ nov.), 15 €" } },
   { id: "trail-du-facteur",          bloc: "noel", weekend: "2026-12-19", name: "Trail du Facteur",          dept: "26", km: 15, dplus: 310, tracks: ["100"],
     url: "https://cs-galaurien-cyclo-trail.sportsregions.fr", signup: { note: "ouverture non annoncée, 12–15 € (départ 13h)" } },
   { id: "montee-de-chambles",        bloc: "noel", weekend: "2026-12-26", date: "2026-12-27", name: "Montée de Chambles",        dept: "42", km: 11, dplus: 300, tracks: ["100", "40"],
-    url: "https://www.logicourse.fr", signup: { note: "ouverture ≈ fin nov. sur logicourse, 14 €, 1 000 dossards" } },
+    url: "https://www.logicourse.fr", signup: { expect: "≈ fin nov.", note: "ouverture ≈ fin nov. sur logicourse, 14 €, 1 000 dossards" } },
   { id: "trail-de-la-guigne",        bloc: "noel", weekend: "2026-12-26", date: "2026-12-27", name: "Trail de la Guigne",        dept: "14", km: 14, dplus: 160, tracks: ["100"],
     url: "https://traildelaguigne.fr/", signup: { open: "2026-10-01", note: "ouverture le 1er octobre 2026" } },
 
   /* ─── Mars · 20–30 km ─────────────────────────────────────────────────── */
   { id: "trail-retournacois",        bloc: "mars", weekend: "2027-03-20", name: "Trail Retournacois",        dept: "43", km: 24, dplus: 1100, tracks: ["100"],
-    url: "https://www.chronopuces.fr/trail-retournacois-2026", signup: { note: "2026 : ouvertes du 19/12 au 21/03 → attendre mi-déc. 2026 (chronopuces)" } },
+    url: "https://www.chronopuces.fr/trail-retournacois-2026", signup: { expect: "≈ mi-déc.", note: "2026 : ouvertes du 19/12 au 21/03 → attendre mi-déc. 2026 (chronopuces)" } },
   { id: "trail-retournacois-10",     bloc: "mars", weekend: "2027-03-20", name: "Trail Retournacois – 10 km", dept: "43", km: 10, dplus: 360, tracks: ["40"],
-    url: "https://www.chronopuces.fr/trail-retournacois-2026", signup: { note: "date 2027 à confirmer — 2026 : ouvertes du 19/12 au 21/03 → attendre mi-déc. 2026 (chronopuces)" } },
+    url: "https://www.chronopuces.fr/trail-retournacois-2026", signup: { expect: "≈ mi-déc.", note: "date 2027 à confirmer — 2026 : ouvertes du 19/12 au 21/03 → attendre mi-déc. 2026 (chronopuces)" } },
   { id: "trail-retournacois-15",     bloc: "mars", weekend: "2027-03-20", name: "Trail Retournacois – 15 km « Casse Patte »", dept: "43", km: 15, dplus: 700, tracks: ["40"],
-    url: "https://www.chronopuces.fr/trail-retournacois-2026", signup: { note: "date 2027 à confirmer — 2026 : ouvertes du 19/12 au 21/03 → attendre mi-déc. 2026 (chronopuces)" } },
+    url: "https://www.chronopuces.fr/trail-retournacois-2026", signup: { expect: "≈ mi-déc.", note: "date 2027 à confirmer — 2026 : ouvertes du 19/12 au 21/03 → attendre mi-déc. 2026 (chronopuces)" } },
   { id: "trail-du-ventoux",          bloc: "mars", weekend: "2027-03-20", name: "Trail du Ventoux",          dept: "84", km: 29, dplus: 1350, tracks: ["100"],
     url: "https://trailduventoux.fr/", signup: { open: "2026-10-03", note: "ouverture samedi 3 octobre 2026 — très demandé, s'inscrire vite" } },
   /* EcoTrail : deux formats, deux jours différents → deux courses distinctes */
@@ -61,31 +64,31 @@ window.COURSES = [
   { id: "ecotrail-paris-22",         bloc: "mars", weekend: "2027-03-20", date: "2027-03-21", name: "EcoTrail de Paris – 22 km", dept: "75", km: 22,   dplus: 550, tracks: ["100"],
     url: "https://www.ecotrailparis.com/course/trail-20-km", signup: { status: "open", note: "sur njuko" } },
   { id: "trail-mont-st-romain",      bloc: "mars", weekend: "2027-03-20", name: "Trail du Mont St Romain",   dept: "71", km: 30, dplus: 1000, tracks: ["100"],
-    url: "https://trail-mont-saint-romain.fr/", signup: { note: "2027 non annoncé — 2026 ≈ déc. sur yaka-chrono ; suivre la page FB" } },
+    url: "https://trail-mont-saint-romain.fr/", signup: { expect: "≈ déc.", note: "2027 non annoncé — 2026 ≈ déc. sur yaka-chrono ; suivre la page FB" } },
   { id: "sktrail",                   bloc: "mars", weekend: "2027-03-20", name: "SKTRAIL",                   dept: "64", km: 22, dplus: 1500, tracks: ["100"],
     url: "https://www.sarakorrika.com/", signup: { note: "Sara Korrika Trail — 650 dossards, 25 € ; date 2027 à confirmer (dernier dim. de mars → 28/03 ?)" } },
   { id: "trail-des-grottes",         bloc: "mars", weekend: "2027-03-27", date: "2027-03-28", name: "Trail des Grottes",         dept: "73", km: 20, dplus: 1050, tracks: ["100"],
-    url: "https://grottes-saint-christophe.com/", signup: { note: "annoncé dim. 28/03/2027 — ouverture ≈ janv. (ledossard.com), +5 € après le 16/03" } },
+    url: "https://grottes-saint-christophe.com/", signup: { expect: "≈ janv.", note: "annoncé dim. 28/03/2027 — ouverture ≈ janv. (ledossard.com), +5 € après le 16/03" } },
   { id: "tour-pedestre-villers",     bloc: "mars", weekend: "2027-03-20", name: "Tour pédestre de Villers-lès-Nancy", dept: "54", km: 28, dplus: 420, tracks: ["100"],
     url: "https://tour-pedestre.fr/", signup: { note: "2027 non annoncé — 2026 : dim. 22/03, 25 €, chronopro" } },
   { id: "trail-du-printemps",        bloc: "mars", weekend: "2027-03-20", name: "Trail du Printemps",        dept: "73", km: 25, dplus: 1280, tracks: ["100"],
     url: "https://fr.milesrepublic.com/event/trail-du-printemps-9228", signup: { note: "2027 non annoncé — 2026 : dim. 22/03" } },
   { id: "grand-trail-garlaban",      bloc: "mars", weekend: "2027-03-27", name: "Grand Trail du Garlaban",   dept: "13", km: 28, dplus: 1700, tracks: ["100"],
-    url: "https://www.grandtraildugarlaban.fr/", signup: { note: "2027 non annoncé — 2026 : dim. 29/03, ouverture ≈ déc. (sportips)" } },
+    url: "https://www.grandtraildugarlaban.fr/", signup: { expect: "≈ déc.", note: "2027 non annoncé — 2026 : dim. 29/03, ouverture ≈ déc. (sportips)" } },
   { id: "trail-des-piqueurs",        bloc: "mars", weekend: "2027-03-27", name: "Trail des Piqueurs",        dept: "63", km: 25, dplus: 1000, tracks: ["100"],
-    url: "https://traildespiqueurs.fr/inscriptions/", signup: { note: "⚠️ édition 2026 complète (liste d'attente) — ouverture ≈ nov./déc. (sport-up), se remplit vite" } },
+    url: "https://traildespiqueurs.fr/inscriptions/", signup: { expect: "≈ nov./déc.", note: "⚠️ édition 2026 complète (liste d'attente) — ouverture ≈ nov./déc. (sport-up), se remplit vite" } },
   { id: "trailversee-haute-joux",    bloc: "mars", weekend: "2027-03-27", name: "Trail'versée de la Haute Joux", dept: "39", km: 26, dplus: 980, tracks: ["100"],
-    url: "https://www.skiclubduplateaudenozeroy.com/", signup: { note: "2027 non annoncé — 2026 : dim. 29/03, ouverture ≈ janv. (njuko)" } },
+    url: "https://www.skiclubduplateaudenozeroy.com/", signup: { expect: "≈ janv.", note: "2027 non annoncé — 2026 : dim. 29/03, ouverture ≈ janv. (njuko)" } },
   { id: "trail-du-sanglier",         bloc: "mars", weekend: "2027-03-27", name: "Trail du Sanglier",         dept: "69", km: 28, dplus: 1200, tracks: ["100"],
-    url: "https://traildusanglier.com/", signup: { note: "2027 non annoncé — 2026 : dim. 29/03, 25 €, ouverture ≈ déc. (yaka)" } },
+    url: "https://traildusanglier.com/", signup: { expect: "≈ déc.", note: "2027 non annoncé — 2026 : dim. 29/03, 25 €, ouverture ≈ déc. (yaka)" } },
   { id: "trail-des-jonquilles-10",   bloc: "mars", weekend: "2027-03-27", name: "Trail des Jonquilles – 10 km « La Tige »", dept: "43", km: 10, dplus: 200, tracks: ["40"],
     url: "https://finishers.com/course/trail-des-jonquilles-du-haut-lignon", signup: { note: "Tence (Haut-Lignon) — date 2027 à confirmer (2026 : 27–29/03, 2027 : dim. 28/03 selon Finishers) ; contact traildesjonquilles.hautlignon@gmail.com" } },
   { id: "trail-des-jonquilles-15",   bloc: "mars", weekend: "2027-03-27", name: "Trail des Jonquilles – 15 km « La Pétale »", dept: "43", km: 15, dplus: 280, tracks: ["40"],
     url: "https://finishers.com/course/trail-des-jonquilles-du-haut-lignon", signup: { note: "Tence (Haut-Lignon) — date 2027 à confirmer (2026 : 27–29/03, 2027 : dim. 28/03 selon Finishers) ; contact traildesjonquilles.hautlignon@gmail.com" } },
   /* Relais à 2 sur le 40 km : tronçon 27 km (0 to 100) + tronçon 15 km (0 to 40) — Alice × Mims */
-  { id: "trail-des-citadelles-relais", bloc: "mars", weekend: "2027-03-27", date: "2027-03-28", name: "Trail des Citadelles – Relais 40 km, tronçon 27 km", dept: "09", km: 27, dplus: 1200, tracks: ["100"],
+  { id: "trail-des-citadelles-relais", bloc: "mars", weekend: "2027-03-27", date: "2027-03-28", name: "Trail des Citadelles – Relais 40 km, tronçon 27 km", format: "Relais 40 km (ton tronçon)", dept: "09", km: 27, dplus: 1200, tracks: ["100"],
     url: "http://trail-des-citadelles.blogspot.com/", signup: { open: "2026-11-08", note: "40 km (relais) : dim. 8 nov. 15h — ⚠️ complet en quelques heures, être devant l'écran à l'heure (26 km solo : 1er nov. 17h)" } },
-  { id: "trail-des-citadelles-relais-15", bloc: "mars", weekend: "2027-03-27", date: "2027-03-28", name: "Trail des Citadelles – Relais 40 km, tronçon 15 km", dept: "09", km: 15, dplus: null, tracks: ["40"],
+  { id: "trail-des-citadelles-relais-15", bloc: "mars", weekend: "2027-03-27", date: "2027-03-28", name: "Trail des Citadelles – Relais 40 km, tronçon 15 km", format: "Relais 40 km (ton tronçon)", dept: "09", km: 15, dplus: null, tracks: ["40"],
     url: "http://trail-des-citadelles.blogspot.com/", signup: { open: "2026-11-08", note: "40 km (relais) : dim. 8 nov. 15h — ⚠️ complet en quelques heures ; l'inscription du relais se fait en binôme" } },
 
   /* ─── Fin mai · début juin · 40 km max ────────────────────────────────── */
@@ -94,34 +97,34 @@ window.COURSES = [
   { id: "trail-eolienne-23",         bloc: "juin", weekend: "2027-05-29", name: "Trail de l'Éolienne – 23 km « Grand Défi »", dept: "69", km: 23, dplus: 940, tracks: ["40"],
     url: "https://ententeouestlyonnais.athle.org/", signup: { note: "Les Sauvages (près de Tarare), sam. 29/05/2027 — 2026 : départ 16h ; contact trail.eolienne@gmail.com" } },
   { id: "maxi-race",                 bloc: "juin", weekend: "2027-05-29", name: "MaXi-Race",                 dept: "74", km: 42, dplus: 1800, tracks: ["100"],
-    url: "https://www.maxi-race.org/en/inscriptions/", signup: { open: "2026-10-01", close: "2026-10-07", note: "pré-inscriptions du 1er au 7 oct. 2026 (10h → 18h), puis tirage au sort 8–10 oct., liste d'attente dès le 13" } },
+    url: "https://www.maxi-race.org/en/inscriptions/", signup: { waitlist: true, open: "2026-10-01", close: "2026-10-07", note: "pré-inscriptions du 1er au 7 oct. 2026 (10h → 18h), puis tirage au sort 8–10 oct., liste d'attente dès le 13" } },
   { id: "maxi-race-quart-de-tour",   bloc: "juin", weekend: "2027-05-29", date: "2027-05-29", name: "MaXi-Race – Quart de tOur du Lac", dept: "74", km: 20, dplus: 410, tracks: ["40"],
-    url: "https://www.maxi-race.org/fr/quart-de-tour/", signup: { open: "2026-10-01", close: "2026-10-02", note: "trail « négatif » Semnoz → Annecy (410 D+ / 1450 D−), sam. 29/05 9h ; pré-inscriptions 1er–2 oct. 2026 puis tirage au sort 3–4 oct. → clos, liste d'attente annoncée" } },
+    url: "https://www.maxi-race.org/fr/quart-de-tour/", signup: { waitlist: true, open: "2026-10-01", close: "2026-10-02", note: "trail « négatif » Semnoz → Annecy (410 D+ / 1450 D−), sam. 29/05 9h ; pré-inscriptions 1er–2 oct. 2026 puis tirage au sort 3–4 oct. → clos, liste d'attente annoncée" } },
   { id: "cascades-de-l-alloix",      bloc: "juin", weekend: "2027-05-29", name: "Course des Cascades de l'Alloix", dept: "38", km: 35, dplus: 2000, tracks: ["100"],
     url: "https://coursedescascades.fr/", signup: { note: "⚠️ édition 2027 incertaine — site de nouveau en ligne mais aucune info 2027 (club CSVM 07 68 28 18 18)" } },
   { id: "alvitrail",                 bloc: "juin", weekend: "2027-05-29", name: "Alvitrail",                 dept: "46", km: 33, dplus: 1450, tracks: ["100"],
-    url: "https://www.alvitrail46.fr/", signup: { note: "= Trail du Rocamadour — 2026 : dim. 31/05, ouverture ≈ janv. (chrono-start)" } },
+    url: "https://www.alvitrail46.fr/", signup: { expect: "≈ janv.", note: "= Trail du Rocamadour — 2026 : dim. 31/05, ouverture ≈ janv. (chrono-start)" } },
   { id: "volta-fondeguilla",         bloc: "juin", weekend: "2027-05-29", name: "Volta al Terme de Fondeguilla", dept: "Espagne", km: 34.5, dplus: 2200, tracks: ["100"],
-    url: "https://www.voltaalterme.eu/", signup: { note: "29/05/2027 selon l'ITRA (non officiel), 400 places — 2026 : ouvertes du 28/02 au 24/05, 35 € → attendre fin février 2027" } },
+    url: "https://www.voltaalterme.eu/", signup: { expect: "≈ fin févr.", note: "29/05/2027 selon l'ITRA (non officiel), 400 places — 2026 : ouvertes du 28/02 au 24/05, 35 € → attendre fin février 2027" } },
   { id: "trail-cote-roannaise",      bloc: "juin", weekend: "2027-05-29", name: "Trail de la Côte Roannaise", dept: "42", km: 42, dplus: 2000, tracks: ["100"],
-    url: "https://chronospheres.fr/evenements/detail/TRAIL-DE-LA-COTE-ROANNAISE-2026-1386", signup: { note: "⚠️ 42 km limité à 80 dossards — ouverture ≈ 20 février" } },
+    url: "https://chronospheres.fr/evenements/detail/TRAIL-DE-LA-COTE-ROANNAISE-2026-1386", signup: { expect: "≈ 20 févr.", note: "⚠️ 42 km limité à 80 dossards — ouverture ≈ 20 février" } },
   /* Déplacée du WE 29–30 mai → 5–6 juin le 07/10/2026 : le site officiel annonce le 6 juin 2027 */
   { id: "trail-des-marcaires",       bloc: "juin", weekend: "2027-06-05", date: "2027-06-06", name: "Trail des Marcaires",       dept: "68", km: 32, dplus: 1630, tracks: ["100"],
-    url: "https://www.traildesmarcaires.com/", signup: { note: "dim. 6/06/2027 (site officiel ; les agrégateurs disent encore 30/05) — ouverture ≈ déc./janv. (sporkrono)" } },
+    url: "https://www.traildesmarcaires.com/", signup: { expect: "≈ déc./janv.", note: "dim. 6/06/2027 (site officiel ; les agrégateurs disent encore 30/05) — ouverture ≈ déc./janv. (sporkrono)" } },
   { id: "balcons-de-la-sure",        bloc: "juin", weekend: "2027-06-05", date: "2027-06-06", name: "Les Balcons de la Sure",    dept: "38", km: 32, dplus: 1600, tracks: ["100"],
-    url: "https://trailcircuitdelasure.fr/", signup: { note: "dim. 6/06/2027 confirmé, départ Voiron — 30 €, ouverture ≈ janv. (njuko)" } },
+    url: "https://trailcircuitdelasure.fr/", signup: { expect: "≈ janv.", note: "dim. 6/06/2027 confirmé, départ Voiron — 30 €, ouverture ≈ janv. (njuko)" } },
   { id: "integrale-du-bostet",       bloc: "juin", weekend: "2027-06-05", name: "L'Intégrale du Bostet",     dept: "73", km: 35, dplus: 2150, tracks: ["100"],
-    url: "https://www.teambostet.com/trail-du-bostet", signup: { note: "50 €, départ 11h — inscriptions jusqu'à la veille, même sur place" } },
+    url: "https://www.teambostet.com/trail-du-bostet", signup: { expect: "jusqu'à la veille", note: "50 €, départ 11h — inscriptions jusqu'à la veille, même sur place" } },
   { id: "balcons-du-verdon",         bloc: "juin", weekend: "2027-06-05", name: "Balcons du Verdon",         dept: "04", km: 40, dplus: 1900, tracks: ["100"],
     url: "https://varverdontrailcanyon.com/en/register-for-a-race/", signup: { open: "2026-10-15", note: "ouverture le 15 octobre 2026 (Var Verdon Trail Canyon)" } },
   { id: "traversee-des-dentelles",   bloc: "juin", weekend: "2027-06-05", name: "Traversée des Dentelles",   dept: "84", km: 42, dplus: 2000, tracks: ["100"],
-    url: "https://www.finishers.com/course/traversee-des-dentelles-gigondas", signup: { note: "39e édition 5–6/06/2027 au départ de Gigondas — pas encore ouvertes : liste d'attente sur Finishers (07/10), places limitées" } },
+    url: "https://www.finishers.com/course/traversee-des-dentelles-gigondas", signup: { status: "waitlist", note: "39e édition 5–6/06/2027 au départ de Gigondas — pas encore ouvertes : liste d'attente sur Finishers (07/10), places limitées" } },
   { id: "trail-du-cagire",           bloc: "juin", weekend: "2027-06-05", date: "2027-06-06", name: "Trail du Cagire",           dept: "31", km: 29, dplus: 1900, tracks: ["100"],
-    url: "https://www.lesgalopinsducagire.fr/le-trail-du-cagire/", signup: { note: "dim. 6/06/2027 confirmé (14e édition) — 34 €, départ 8h, « infos et inscriptions bientôt »" } },
+    url: "https://www.lesgalopinsducagire.fr/le-trail-du-cagire/", signup: { expect: "bientôt", note: "dim. 6/06/2027 confirmé (14e édition) — 34 €, départ 8h, « infos et inscriptions bientôt »" } },
   { id: "trail-des-millefonts",      bloc: "juin", weekend: "2027-06-05", name: "Trail des Millefonts",      dept: "06", km: 31, dplus: 2250, tracks: ["100"],
-    url: "https://www.facebook.com/trailsdesmillefonts/", signup: { note: "annoncé 5–6/06/2027 — ouverture ≈ mars (sport-up)" } },
+    url: "https://www.facebook.com/trailsdesmillefonts/", signup: { expect: "≈ mars", note: "annoncé 5–6/06/2027 — ouverture ≈ mars (sport-up)" } },
   { id: "montan-aspe",               bloc: "juin", weekend: "2027-06-05", name: "Montan'Aspe",               dept: "64", km: 37, dplus: 2700, tracks: ["100"],
-    url: "https://www.trail-montanaspe.com/", signup: { note: "Défi de l'Ourdinse — 2027 non annoncé, 2026 : ven. 5/06, ouverture ≈ janv. (njuko)" } },
+    url: "https://www.trail-montanaspe.com/", signup: { expect: "≈ janv.", note: "Défi de l'Ourdinse — 2027 non annoncé, 2026 : ven. 5/06, ouverture ≈ janv. (njuko)" } },
   { id: "transju-trails",            bloc: "juin", weekend: "2027-06-05", name: "La Transju'Trails",         dept: "39", km: 42, dplus: 2200, tracks: ["100"],
     url: "https://www.latransju.com/en/evenements/la-transju-trail/", signup: { open: "2026-10-08", note: "ouverture jeudi 8 octobre 2026 à 12h — tarifs préférentiels jusqu'à fin mars" } },
   { id: "transju-trails-15",         bloc: "juin", weekend: "2027-06-05", date: "2027-06-06", name: "La Transju'Trails – 15 km", dept: "39", km: 15, dplus: 870, tracks: ["40"],
@@ -133,20 +136,20 @@ window.COURSES = [
 
   /* ─── Début juillet · 40–50 km ────────────────────────────────────────── */
   { id: "chalmatrail",               bloc: "juillet", weekend: "2027-07-03", name: "Chalmatrail",            dept: "42", km: 45, dplus: 1840, tracks: ["100"],
-    url: "https://escoutoux.net/Chalmatrail", signup: { note: "2026 : ouvertes le 20 déc. 2025 → attendre ~20 déc. 2026 (logicourse), départ 7h" } },
+    url: "https://escoutoux.net/Chalmatrail", signup: { expect: "≈ 20 déc.", note: "2026 : ouvertes le 20 déc. 2025 → attendre ~20 déc. 2026 (logicourse), départ 7h" } },
   { id: "courir-pour-des-momes-20",  bloc: "juillet", weekend: "2027-07-03", name: "Courir pour des Mômes – 20 km", dept: "42", km: 20, dplus: 700, tracks: ["40"],
     url: "https://www.logicourse.fr", signup: { note: "Graix (Pilat, près du Bessat) — date 2027 à confirmer ; 400 dossards, au profit de Marabout de Ficelle (cancers rares de l'enfant)" } },
   { id: "chalmatrail-20",            bloc: "juillet", weekend: "2027-07-03", name: "Chalmatrail – Chalma'Classique 20 km", dept: "42", km: 20, dplus: 720, tracks: ["40"],
-    url: "https://escoutoux.net/Chalmatrail", signup: { note: "2026 : ouvertes le 20 déc. 2025 → attendre ~20 déc. 2026 (logicourse)" } },
+    url: "https://escoutoux.net/Chalmatrail", signup: { expect: "≈ 20 déc.", note: "2026 : ouvertes le 20 déc. 2025 → attendre ~20 déc. 2026 (logicourse)" } },
   { id: "trail-des-bauges",          bloc: "juillet", weekend: "2027-07-03", name: "Trail des Bauges",       dept: "73", km: 48, dplus: 2750, tracks: ["100"],
-    url: "https://traildesbauges.wixsite.com/traildesbauges", signup: { note: "2027 non annoncé — 2026 : dim. 5/07, ouverture ≈ février (njuko)" } },
+    url: "https://traildesbauges.wixsite.com/traildesbauges", signup: { expect: "≈ févr.", note: "2027 non annoncé — 2026 : dim. 5/07, ouverture ≈ février (njuko)" } },
   { id: "grand-raid-guillestrois-queyras", bloc: "juillet", weekend: "2027-07-03", name: "Grand Raid Guillestrois-Queyras", dept: "05", km: 48, dplus: 3200, tracks: ["100"],
-    url: "https://grandraidduguillestrois-queyras.com/inscriptions/", signup: { note: "2–4/07/2027 (agenda office de tourisme) — Trail des Lacs 48 km, 60 € puis 65 € (sportips) ; ouverture ≈ oct./déc. ; ⚠️ jauge fermée sans liste d'attente" } },
+    url: "https://grandraidduguillestrois-queyras.com/inscriptions/", signup: { expect: "≈ oct./déc.", note: "2–4/07/2027 (agenda office de tourisme) — Trail des Lacs 48 km, 60 € puis 65 € (sportips) ; ouverture ≈ oct./déc. ; ⚠️ jauge fermée sans liste d'attente" } },
   { id: "tour-glaciers-vanoise",     bloc: "juillet", weekend: "2027-07-03", name: "Tour des Glaciers de la Vanoise", dept: "73", km: 41, dplus: 2850, tracks: ["100"],
-    url: "https://www.sibotrails.com/trail/tour-des-glaciers-de-la-vanoise/", signup: { note: "course « L'Incontournable » 41 km (le TGV fait 73 km) — 2026 : ouverture lun. 20 oct. 2025 → probable ~19 oct. 2026, se remplit vite" } },
+    url: "https://www.sibotrails.com/trail/tour-des-glaciers-de-la-vanoise/", signup: { expect: "≈ 19 oct.", note: "course « L'Incontournable » 41 km (le TGV fait 73 km) — 2026 : ouverture lun. 20 oct. 2025 → probable ~19 oct. 2026, se remplit vite" } },
   { id: "tour-glaciers-vanoise-25",  bloc: "juillet", weekend: "2027-07-03", name: "Tour des Glaciers de la Vanoise – 25 km « Pralo vu du Ciel »", dept: "73", km: 25, dplus: 1750, tracks: ["40"],
-    url: "https://www.sibotrails.com/trail/tour-des-glaciers-de-la-vanoise/", signup: { note: "Pralognan — 2026 : dim. 5/07 8h, 30 € jusqu'au 30/04 ; ouverture 2026 lun. 20 oct. 2025 → probable ~19 oct. 2026, se remplit vite" } },
+    url: "https://www.sibotrails.com/trail/tour-des-glaciers-de-la-vanoise/", signup: { expect: "≈ 19 oct.", note: "Pralognan — 2026 : dim. 5/07 8h, 30 € jusqu'au 30/04 ; ouverture 2026 lun. 20 oct. 2025 → probable ~19 oct. 2026, se remplit vite" } },
   /* Déplacée de « juin » → « juillet » le 22/09/2026 (signalé par Myriam) : l'édition 2026 a eu lieu le dim. 5 juillet */
   { id: "trail-hyeges-verdon",       bloc: "juillet", weekend: "2027-07-03", name: "Trail Hyèges Verdon",       dept: "04", km: 45, dplus: 2300, tracks: ["100"],
-    url: "https://www.thvtrail.fr/", signup: { note: "2026 : dim. 5/07 — ouverture ≈ fév./mars (sportips)" } }
+    url: "https://www.thvtrail.fr/", signup: { expect: "≈ févr./mars", note: "2026 : dim. 5/07 — ouverture ≈ fév./mars (sportips)" } }
 ];

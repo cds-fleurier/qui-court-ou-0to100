@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.6.0 — 9 octobre 2026
+- **Refonte des cartes course, plus lisibles et harmonisées** :
+  - titre = nom de la course, le format en sous-titre (« Casse Patte », « Grand Défi »…), la distance n'est plus répétée ;
+  - une ligne unique jour · km · D+ ;
+  - **pastille d'inscription courte, même vocabulaire partout** : Ouvertes · Ouverture le 8 nov. · J-30 · Ouverture ≈ janv. · Ouverture ? · Liste d'attente · Closes (nouveaux champs `signup.expect`, `signup.waitlist`, `status: "waitlist"`) ;
+  - **accordéon « Infos »** pour tout le reste (tarifs, plateforme, remarques, lien vers le site) ; il reste ouvert pendant les rafraîchissements ;
+  - « personne pour l'instant » retiré ;
+  - deux cartes du même nom dans un bloc (EcoTrail, Jonquilles, Retournacois…) : la distance est ajoutée au titre (« EcoTrail de Paris 30 km »).
+- Choisir son prénom bascule le filtre sur son parcours (0 to 40 ou 0 to 100) ; « Tous » reste à un tap.
+- Champ `format` optionnel (sous-titre imposé) : utilisé pour le relais des Citadelles.
+
 ## 1.5.4 — 9 octobre 2026
 - **0 to 40 : La Transju'Trails – 15 km** (dim. 6/06/2027, 870 D+, boucle au départ des Tuffes, Les Rousses). Inscriptions ouvertes depuis le 8 oct. sur njuko (annonce officielle).
 - Pauline l'avait saisie en « autre » (« Trans ju trail (39) 15km ») → basculée sur `transju-trails-15` après mise en ligne.

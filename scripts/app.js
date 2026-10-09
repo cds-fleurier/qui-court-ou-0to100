@@ -4,7 +4,7 @@
    (API_URL dans config.js). Sans API_URL → mode démo (localStorage).
    ──────────────────────────────────────────────────────────────────────────── */
 
-const APP_VERSION = "1.5.4";
+const APP_VERSION = "1.6.0";
 /* Identité partagée avec le calendrier et la carte (même origine → même localStorage) */
 const LS_ME      = "team_me";
 const LS_ME_OLD  = "qco_me";
@@ -26,7 +26,8 @@ const state = {
   guestOpen: false,    // formulaire « je ne suis pas dans la liste » ouvert
   lastSync: null,
   offline: false,      // vrai si le dernier chargement a échoué (on affiche le cache)
-  savedAt: 0           // horodatage du dernier enregistrement (pour ignorer un chargement périmé)
+  savedAt: 0,          // horodatage du dernier enregistrement (pour ignorer un chargement périmé)
+  infoOpen: new Set()  // cartes dont l'accordéon « infos » est ouvert (survit aux rafraîchissements)
 };
 
 const PARTICIPANTS = (window.PARTICIPANTS || []).slice().sort((a, b) => a.name.localeCompare(b.name, "fr"));
@@ -69,26 +70,35 @@ function avatar(p, size = "") {
 }
 function fmtKm(v) { return typeof v === "number" ? String(v).replace(".", ",") + " km" : v; }
 function fmtDplus(v) { return typeof v === "number" ? v.toLocaleString("fr-FR") + " m D+" : (v || "D+ à préciser"); }
-/* Ligne « inscriptions » d'une course : ouverture datée (avec J-n), déjà ouvertes, ou note libre */
+/* Pastille « inscriptions » d'une course : un libellé court et le même vocabulaire partout.
+   Le détail (tarifs, plateforme, remarques) est dans sg.note, affiché dans l'accordéon. */
 function signupInfo(course) {
-  const sg = course.signup;
-  if (!sg) return null;
+  const sg = course.signup || {};
   const today = new Date(); today.setHours(0, 0, 0, 0);
-  const fmt = d => d.toLocaleDateString("fr-FR", { weekday: "short", day: "numeric", month: "short" });
-  if (sg.close && new Date(sg.close + "T00:00:00") < today) {
-    return { cls: "", text: `Inscriptions closes depuis le ${fmt(new Date(sg.close + "T00:00:00"))}`, note: sg.note };
+  const day = iso => new Date(iso + "T00:00:00");
+  const fmt = d => d.toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
+  if (sg.close && day(sg.close) < today) {
+    return sg.waitlist ? { cls: "wait", text: "Liste d'attente" } : { cls: "closed", text: "Closes" };
   }
+  if (sg.status === "waitlist") return { cls: "wait", text: "Liste d'attente" };
   if (sg.open) {
-    const d = new Date(sg.open + "T00:00:00");
-    const days = Math.round((d - today) / 86400000);
-    const when = fmt(d);
-    if (days > 0) return { cls: days <= 21 ? "soon" : "", text: `Inscriptions : ouverture ${when} · J-${days}`, note: sg.note };
-    if (days === 0) return { cls: "soon", text: "Inscriptions : ouverture AUJOURD'HUI", note: sg.note };
-    const until = sg.close ? ` (jusqu'au ${fmt(new Date(sg.close + "T00:00:00"))})` : "";
-    return { cls: "open", text: `Inscriptions ouvertes depuis le ${when}${until}`, note: sg.note };
+    const days = Math.round((day(sg.open) - today) / 86400000);
+    if (days > 0) return { cls: days <= 21 ? "soon" : "", text: `Ouverture le ${fmt(day(sg.open))} · J-${days}` };
+    if (days === 0) return { cls: "soon", text: "Ouverture aujourd'hui" };
   }
-  if (sg.status === "open") return { cls: "open", text: "Inscriptions ouvertes", note: sg.note };
-  return { cls: "", text: sg.note || "", note: null };
+  if (sg.open || sg.status === "open") {
+    return { cls: "open", text: sg.close ? `Ouvertes jusqu'au ${fmt(day(sg.close))}` : "Ouvertes" };
+  }
+  if (sg.expect) return { cls: "", text: /^≈/.test(sg.expect) ? `Ouverture ${sg.expect}` : `Inscriptions ${sg.expect}` };
+  return { cls: "", text: "Ouverture ?" };
+}
+/* « Trail Retournacois – 15 km « Casse Patte » » → titre + format sans la distance (déjà dans la ligne km) */
+function splitName(name, format) {
+  const i = name.indexOf(" – ");
+  if (format) return { title: i < 0 ? name : name.slice(0, i), format };
+  if (i < 0) return { title: name, format: "" };
+  const rest = name.slice(i + 3).replace(/\b\d+(,\d+)? km\b/g, "").replace(/^[\s,–-]+|[\s,–-]+$/g, "").replace(/\s{2,}/g, " ");
+  return { title: name.slice(0, i), format: rest };
 }
 
 function fmtDay(iso) {
@@ -248,19 +258,27 @@ function avatarsRow(people, { max = 8 } = {}) {
   </div>`;
 }
 
-function courseCard(course, blocId, meChoice) {
+function courseCard(course, blocId, meChoice, homonyms = new Set()) {
   const runners = runnersOn(blocId, course.id);
   const isMine = meChoice && meChoice.course === course.id;
-  const q = encodeURIComponent(`${course.name} trail 2027`);
-  const link = course.url
-    ? `<a class="clink" href="${esc(course.url)}" target="_blank" rel="noopener">site ↗</a>`
-    : `<a class="clink clink--soft" href="https://www.google.com/search?q=${q}" target="_blank" rel="noopener">chercher ↗</a>`;
+  const split = splitName(course.name, course.format);
+  const format = split.format;
+  // Deux cartes affichées sous le même nom (EcoTrail 22 / 30 km…) : la distance va dans le titre
+  // (distance du nom officiel si elle y figure — « EcoTrail 30 km » plutôt que 29,5 — sinon km)
+  const named = (course.name.match(/\d+(,\d+)? km/g) || []).pop();
+  const title = homonyms.has(split.title) ? `${split.title} ${named || fmtKm(course.km)}` : split.title;
   const trackDots = course.tracks.map(t => `<i class="dot dot--${t}" title="0 to ${t}"></i>`).join("");
   const sg = signupInfo(course);
-  const signupLine = sg && sg.text
-    ? `<div class="csignup csignup--${sg.cls}" ${sg.note ? `title="${esc(sg.note)}"` : ""}>📝 ${esc(sg.text)}${sg.note && sg.cls ? ` <span class="csignup-note">— ${esc(sg.note)}</span>` : ""}</div>`
-    : "";
-  const day = course.date ? `<span class="cday">${esc(fmtDay(course.date))}</span>` : "";
+  const note = course.signup && course.signup.note;
+  const q = encodeURIComponent(`${course.name} trail 2027`);
+  const link = course.url
+    ? `<a class="clink" href="${esc(course.url)}" target="_blank" rel="noopener">${sg.cls === "open" ? "S'inscrire" : "Site de la course"} ↗</a>`
+    : `<a class="clink clink--soft" href="https://www.google.com/search?q=${q}" target="_blank" rel="noopener">Chercher la course ↗</a>`;
+  const facts = [
+    course.date ? `<span class="cday">${esc(fmtDay(course.date))}</span>` : "",
+    `<span>${esc(fmtKm(course.km))}</span>`,
+    `<span>${esc(fmtDplus(course.dplus))}</span>`
+  ].filter(Boolean).join(`<span class="sep">·</span>`);
   // Bouton uniquement si la course est autorisée pour MON parcours
   const me = state.me && person(state.me);
   const allowed = me && course.tracks.includes(me.group);
@@ -268,14 +286,19 @@ function courseCard(course, blocId, meChoice) {
     ? `<button class="btn btn--on" data-act="clear" data-bloc="${blocId}" ${state.saving === blocId ? "disabled" : ""}>J'y vais ✓</button>`
     : `<button class="btn" data-act="pick" data-bloc="${blocId}" data-course="${esc(course.id)}" ${state.saving === blocId ? "disabled" : ""}>J'y vais</button>`) : "";
   return `<article class="course ${isMine ? "course--mine" : ""} ${runners.length ? "course--busy" : ""}" id="course-${esc(course.id)}">
-    <div class="course-main">
-      <div class="course-title">${trackDots}<span class="cname">${esc(course.name)}</span>${course.dept ? `<span class="cdept">${esc(course.dept)}</span>` : ""}</div>
-      <div class="course-meta">${day}<span>${esc(fmtKm(course.km))}</span><span>·</span><span>${esc(fmtDplus(course.dplus))}</span><span>·</span>${link}</div>
-      ${signupLine}
-      ${avatarsRow(runners)}
-      ${!runners.length ? `<div class="runner-names runner-names--none">personne pour l'instant</div>` : ""}
+    <div class="course-top">
+      <div class="course-head">
+        <div class="course-title">${trackDots}<span class="cname">${esc(title)}</span>${course.dept ? `<span class="cdept">${esc(course.dept)}</span>` : ""}</div>
+        ${format ? `<div class="cformat">${esc(format)}</div>` : ""}
+      </div>
+      <div class="course-side">${action}</div>
     </div>
-    <div class="course-side">${action}</div>
+    <div class="course-meta">${facts}<span class="pill pill--${sg.cls || "none"}">${esc(sg.text)}</span></div>
+    ${avatarsRow(runners)}
+    <details class="cinfo" data-course="${esc(course.id)}" ${state.infoOpen.has(course.id) ? "open" : ""}>
+      <summary>Infos</summary>
+      <div class="cinfo-body">${note ? `<p>${esc(note)}</p>` : ""}<p>${link}</p></div>
+    </details>
   </article>`;
 }
 
@@ -298,11 +321,14 @@ function otherCards(bloc, meChoice) {
       ? `<button class="btn btn--on" data-act="clear" data-bloc="${bloc.id}">J'y vais ✓</button>`
       : `<button class="btn" data-act="pick" data-bloc="${bloc.id}" data-course="${OTHER_COURSE}" data-note="${esc(g.note)}">J'y vais</button>`) : "";
     cards.push(`<article class="course course--other ${isMine ? "course--mine" : ""}">
-      <div class="course-main">
-        <div class="course-title"><span class="cname">${esc(g.note)}</span>${validated ? `<span class="cvalid">✓ validée par le staff</span>` : `<span class="cdept cdept--warn">hors liste · à valider</span>`}</div>
-        ${avatarsRow(g.people.sort((a, b) => a.name.localeCompare(b.name, "fr")))}
+      <div class="course-top">
+        <div class="course-head">
+          <div class="course-title"><span class="cname">${esc(g.note)}</span></div>
+        </div>
+        <div class="course-side">${action}</div>
       </div>
-      <div class="course-side">${action}</div>
+      <div class="course-meta">${validated ? `<span class="pill pill--open">✓ validée par le staff</span>` : `<span class="pill pill--soon">Hors liste · à valider</span>`}</div>
+      ${avatarsRow(g.people.sort((a, b) => a.name.localeCompare(b.name, "fr")))}
     </article>`);
   });
   return cards.join("");
@@ -332,10 +358,13 @@ function renderBlocs() {
     const pending = undecided(bloc.id);
     const chosen = PARTICIPANTS.filter(p => isVisible(p) && choiceOf(p.id, bloc.id)).length;
 
+    // Homonymes calculés sur tout le bloc, quel que soit le filtre : le titre ne change pas selon la vue
+    const titles = COURSES.filter(c => c.bloc === bloc.id).map(c => splitName(c.name, c.format).title);
+    const homonyms = new Set(titles.filter((t, i) => titles.indexOf(t) !== i));
     const weekends = bloc.weekends.map(we => {
       const list = courses.filter(c => c.weekend === we.id);
       if (!list.length) return "";
-      return `<div class="weekend"><h3 class="we-title">${esc(we.label)}</h3>${list.map(c => courseCard(c, bloc.id, meChoice)).join("")}</div>`;
+      return `<div class="weekend"><h3 class="we-title">${esc(we.label)}</h3>${list.map(c => courseCard(c, bloc.id, meChoice, homonyms)).join("")}</div>`;
     }).join("");
 
     const empty = !courses.length
@@ -397,6 +426,9 @@ function bind() {
     state.guestOpen = false;
     state.me = e.target.value || null;
     if (state.me) localStorage.setItem(LS_ME, state.me); else localStorage.removeItem(LS_ME);
+    // On n'affiche d'emblée que les courses de son parcours (le filtre « Tous » reste à un tap)
+    const me = state.me && person(state.me);
+    if (me) { state.filter = me.group; localStorage.setItem(LS_FILTER, state.filter); }
     state.otherOpen = {};
     render();
   });
@@ -409,6 +441,7 @@ function bind() {
     if (!name || !["100", "40"].includes(group)) return;
     state.me = guestId(group, name);
     localStorage.setItem(LS_ME, state.me);
+    state.filter = group; localStorage.setItem(LS_FILTER, state.filter);
     state.guestOpen = false;
     state.otherOpen = {};
     renderMeSelect();
@@ -432,6 +465,13 @@ function bind() {
     else if (act === "other-open") { state.otherOpen[bloc] = true; render(); $(`.other-form[data-bloc="${bloc}"] input`)?.focus(); }
     else if (act === "other-close") { state.otherOpen[bloc] = false; render(); }
   });
+
+  // L'accordéon « infos » reste ouvert après un rafraîchissement (« toggle » ne remonte pas → capture)
+  $("#blocs").addEventListener("toggle", e => {
+    const d = e.target;
+    if (!d.matches || !d.matches(".cinfo")) return;
+    if (d.open) state.infoOpen.add(d.dataset.course); else state.infoOpen.delete(d.dataset.course);
+  }, true);
 
   $("#blocs").addEventListener("submit", e => {
     const form = e.target.closest(".other-form");
@@ -463,7 +503,7 @@ function bind() {
   state.me = localStorage.getItem(LS_ME) || localStorage.getItem(LS_ME_OLD) || null;
   if (state.me && !person(state.me)) state.me = null;
   if (state.me) { localStorage.setItem(LS_ME, state.me); localStorage.removeItem(LS_ME_OLD); }
-  state.filter = localStorage.getItem(LS_FILTER) || "all";
+  state.filter = localStorage.getItem(LS_FILTER) || (state.me && person(state.me)?.group) || "all";
   if (!["all", "100", "40"].includes(state.filter)) state.filter = "all";
   $("#version").textContent = `v${APP_VERSION}`;
   renderMeSelect();

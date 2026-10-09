@@ -205,37 +205,61 @@ button { font: inherit; }
 
 /* ─── Course ───────────────────────────────────────────────────────────────── */
 .course {
-  display: flex; gap: 10px; align-items: stretch;
+  display: grid; gap: 7px;
   background: var(--surface-lo);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 11px 12px;
+  padding: 12px 12px 8px;
   margin-bottom: 8px;
   transition: border-color .15s, background .15s;
 }
 .course--busy { border-color: var(--border-hi); background: var(--surface-hi); }
 .course--mine { border-color: rgba(61, 220, 132, 0.55); background: rgba(61, 220, 132, 0.07); }
-.course--other { border-style: dashed; }
-.course-main { flex: 1; min-width: 0; display: grid; gap: 5px; align-content: start; }
+.course--other { border-style: dashed; padding-bottom: 12px; }
+.course-top { display: flex; gap: 10px; align-items: flex-start; }
+.course-head { flex: 1; min-width: 0; }
 .course-side { flex: none; display: flex; align-items: center; }
+.course-side .btn { padding: 6px 12px; }
 .course-title { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 .cname { font-weight: 800; font-size: 15px; line-height: 1.25; }
+.cformat { margin-top: 2px; font-size: 12.5px; color: var(--text-soft); font-style: italic; }
 .cdept {
   font-size: 11px; font-weight: 600; color: var(--text-soft);
   background: rgba(255,255,255,.06); padding: 2px 6px; border-radius: 6px;
 }
-.cdept--warn { color: #ffd79a; background: var(--warn-soft); }
-.cvalid { font-size: 11px; font-weight: 700; color: var(--ok); background: var(--ok-soft); padding: 2px 6px; border-radius: 6px; }
-.course-meta { display: flex; flex-wrap: wrap; gap: 6px; color: var(--text-soft); font-size: 12.5px; }
-.cday { color: var(--text); font-weight: 600; background: rgba(255,255,255,.07); padding: 0 6px; border-radius: 6px; }
-.clink { color: var(--accent); text-decoration: none; font-weight: 600; }
-.clink--soft { color: var(--text-muted); font-weight: 400; }
-.clink:hover { text-decoration: underline; }
+.course-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; color: var(--text-soft); font-size: 12.5px; }
+.course-meta .sep { color: var(--text-muted); }
+.cday { color: var(--text); font-weight: 600; }
+.pill {
+  margin-left: auto;
+  font-size: 11px; font-weight: 700; letter-spacing: .2px;
+  padding: 3px 8px; border-radius: 999px;
+  background: rgba(255,255,255,.06); color: var(--text-soft);
+  white-space: nowrap;
+}
+.pill--open   { background: var(--ok-soft);   color: #bff5d6; }
+.pill--soon   { background: var(--warn-soft); color: #ffd79a; }
+.pill--wait   { background: var(--warn-soft); color: #ffd79a; }
+.pill--closed { color: var(--text-muted); text-decoration: line-through; }
 
-.csignup { font-size: 12px; color: var(--text-soft); line-height: 1.4; }
-.csignup--soon { color: #ffd79a; font-weight: 600; }
-.csignup--open { color: #bff5d6; font-weight: 600; }
-.csignup-note { font-weight: 400; color: var(--text-soft); }
+.cinfo summary {
+  list-style: none; cursor: pointer; display: inline-block;
+  font-size: 12px; font-weight: 600; color: var(--text-muted);
+  padding: 2px 0;
+}
+.cinfo summary::-webkit-details-marker { display: none; }
+.cinfo summary::after { content: " ▾"; }
+.cinfo[open] summary::after { content: " ▴"; }
+.cinfo summary:hover { color: var(--text-soft); }
+.cinfo-body {
+  margin: 4px 0 4px; padding: 8px 10px;
+  border-left: 2px solid var(--border-hi);
+  font-size: 12.5px; line-height: 1.45; color: var(--text-soft);
+  display: grid; gap: 6px;
+}
+.clink { color: var(--accent); text-decoration: none; font-weight: 600; }
+.clink--soft { color: var(--text-soft); font-weight: 600; }
+.clink:hover { text-decoration: underline; }
 
 .runners { display: flex; align-items: center; gap: 8px; margin-top: 3px; min-width: 0; }
 .ava-stack { display: flex; flex: none; }
@@ -320,8 +344,6 @@ button { font: inherit; }
 .toast--err { border-color: rgba(255, 92, 92, 0.5); color: #ffb3b3; }
 
 @media (max-width: 420px) {
-  .course { flex-direction: column; }
-  .course-side { justify-content: flex-end; }
   .bloc-head { flex-direction: column; }
   .bloc-km { flex-direction: row; align-items: flex-start; flex-wrap: wrap; }
   .me-row { flex-direction: column; align-items: stretch; }
