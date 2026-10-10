@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.6.1 — 10 octobre 2026 (backend seulement)
+- Apps Script : routes de synchro du **calendrier 0 to 100** (`GET ?cal=`, `POST {type:"cal"}`, onglet `calendrier` créé à la volée). Routes existantes inchangées. Voir `backend/README.md`.
+
 ## 1.6.0 — 9 octobre 2026
 - **Refonte des cartes course, plus lisibles et harmonisées** :
   - titre = nom de la course, le format en sous-titre (« Casse Patte », « Grand Défi »…), la distance n'est plus répétée ;

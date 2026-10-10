@@ -64,3 +64,17 @@ de l'onglet `choix` (et lui dire de se re-sélectionner dans « C'est moi »).
   de n'importe qui. Acceptable pour une team de 40 personnes ; le journal permet de
   retrouver un abus, et le Sheet de le corriger.
 - Quotas Apps Script largement suffisants (≈ 20 000 appels/jour).
+
+
+## Onglet `calendrier` (synchro du calendrier 0 to 100, depuis le 10/10/2026)
+
+Créé automatiquement au premier enregistrement (pas besoin de relancer `setup`).
+
+| participant | track | scenario | done | updated_at |
+|---|---|---|---|---|
+| id de la team (`participants.js` ou `guest|…`) | `0to100` · `0to40` | `week1` · `week2` | JSON `{"AAAA-MM-JJ": true/false}` | date |
+
+- `GET ?cal=<participant>` → `{ ok, cal:[{ track, scenario, done, updated_at }] }`
+- `POST { type:"cal", participant, track, scenario, set:{…} }` → fusionne `set` dans `done` (seuls les jours envoyés changent).
+- Pas de ligne dans `journal` pour ces écritures (trop fréquentes : une par série de clics).
+- Les routes de « Qui court où ? » (GET sans paramètre, POST sans `type`) sont inchangées.
