@@ -18,3 +18,6 @@ VO2 Suc (Retournacois 24), La Bosse à Bloc (Retournacois 10), Balcons du Ventou
 
 ## Écarts km / D+ / dates relevés (non modifiés)
 Trail du Facteur 17,2 km (nous 15) · Volta Fondeguilla 2400 D+ (2200) · Côte Roannaise 2200 D+ (2000) · Bostet 36 km / 2200 D+ (35 / 2150) · Millefonts 30 km (31) · SKTRAIL 1595 D+ (1500) · Trail des Grottes 21 km ≈ 900 D+ (1050, source web) · Tour pédestre de Villers 25 ou 27 km (28) · Trail du Sanglier 27 km / 1270 D+ (28 / 1200, sources divergentes) · Transju 42 km 2250 D+ (2200) · Montée de Chambles ≈ 250 D+ (300) · Guigne 140 D+ (160) · Bauges 47 km / 2800 D+ (48 / 2750). Dates : Ventoux 19–21 mars, Haute-Joux 28 mars (nous 27), Cascades 30 mai (nous WE 29–30), Gaschney 13/12 et Corrida Ambarroise 20/12 selon agrégateurs.
+
+## Suite (18/10, v1.6.5)
+Appliqués après vérification par Charles : Trail du Rocamadour AOP, Var Verdon Trail Canyon « Trail des Balcons du Verdon », Course des Cascades 40 km (CDC40, dim. 30/05/2027).

@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.6.5 — 18 octobre 2026
+- **Corrida-Trail Ambarroise – 5 km** : nouvelle carte 0 to 40 (`corrida-trail-ambarroise-5`, même événement que le 10 km 0 to 100 ; 7 €, dès 13 ans, D+ non publié).
+- **Course des Cascades** : édition 2027 confirmée (dim. 30/05, site officiel) — carte « Course des Cascades – 40 km » (« de l'Alloix » retiré), **40 km au lieu de 35** (CDC40, parcours renouvelé), lien vers la page CDC40.
+- **Trail du Rocamadour AOP** remplace « Alvitrail » (nom du club organisateur) ; **Var Verdon Trail Canyon – 40 km « Trail des Balcons du Verdon »** (page épreuves officielle). Ids inchangés.
+- **Trail des Bauges** : la carte 0 to 100 devient « 47 km « Trail Expert » » (47 km au lieu de 48 : nouveau tracé du site officiel ; id `trail-des-bauges` inchangé) ; nouvelle carte **0 to 40 « 23 km « Trail Sportif » »** (`trail-des-bauges-23`, ≈ 1500 D+). Ben et Samuel (« Trail des bauges 23km 1500 D+ » en « autre ») basculés dessus après mise en ligne.
+- Samuel et Lucie l'avaient saisie en « autre » (« Corrida Trail Ambarroise ») → basculés sur `corrida-trail-ambarroise-5` après mise en ligne.
+
 ## 1.6.4 — 18 octobre 2026
 - **Trail du Circuit de la Sure** (dim. 6/06/2027, Voiron) : la carte 0 to 100 devient « 32 km « Les Balcons de la Sure » » (id `balcons-de-la-sure` inchangé) ; nouvelle carte **0 to 40 « 12 km « Le Tour de Vouise » »** (`tour-de-vouise-12`, 660 D+, site officiel).
 - Samuel l'avait saisie en « autre » (« Trail du circuit de la Sure ») → basculé sur `tour-de-vouise-12` après mise en ligne.
