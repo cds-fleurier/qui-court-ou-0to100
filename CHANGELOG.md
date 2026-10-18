@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.6.6 — 18 octobre 2026
+Veille inscriptions du 18/10 (3 agents, 49 courses sans ouverture confirmée) → `docs/inscriptions_veille_2026-10-18.md`.
+- **Grand Raid Guillestrois-Queyras** : ouverture **dim. 1er nov. 2026 à 9h** (lue sur le formulaire registration4all, tous formats), Trail des Lacs sam. 3/07/2027 à 8h, 65 € puis 70 € au 1/02.
+- **Trail'versée de la Haute-Joux** : dim. 28/03/2027 confirmé (Doye, site officiel).
+- **Tour des Glaciers de la Vanoise** (41 et 25 km) : ouverture du 25/10 à 18h confirmée sur la page inscriptions officielle (trailsvanoise.fr, qui écrit « 25 Octobre 2027 », coquille probable), lien des cartes vers cette page.
+- **Volta al Terme** : sam. 29/05/2027 confirmé par le site officiel (44e édition).
+
 ## 1.6.5 — 18 octobre 2026
 - **Corrida-Trail Ambarroise – 5 km** : nouvelle carte 0 to 40 (`corrida-trail-ambarroise-5`, même événement que le 10 km 0 to 100 ; 7 €, dès 13 ans, D+ non publié).
 - **Course des Cascades** : édition 2027 confirmée (dim. 30/05, site officiel) — carte « Course des Cascades – 40 km » (« de l'Alloix » retiré), **40 km au lieu de 35** (CDC40, parcours renouvelé), lien vers la page CDC40.
