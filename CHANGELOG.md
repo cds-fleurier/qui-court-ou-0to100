@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.6.3 — 18 octobre 2026
+- **Trail des Grottes** (dim. 28/03/2027) : la carte 0 to 100 devient « 21 km « Grand Trail des Grottes » » (21 km au lieu de 20, id `trail-des-grottes` inchangé) ; nouvelle carte **0 to 40 « 10 km « Petit Trail des Grottes » »** (`trail-des-grottes-10`, 490 D+, départ 9h45 en 2026).
+- Samuel l'avait saisie en « autre » (« Trail des Grottes ») → basculé sur `trail-des-grottes-10` après mise en ligne.
+
 ## 1.6.2 — 18 octobre 2026
 - **Tour des Glaciers de la Vanoise** : la carte 0 to 100 devient « 41 km « L'Incontournable » » (même présentation que le 25 km « Pralo vu du Ciel »). Inscriptions : **ouverture dim. 25 oct. 2026 à 18h** (info transmise par Charles le 18/10), reportée aussi sur le 25 km. Course le dim. 4/07/2027 (site Sibotrails).
 
