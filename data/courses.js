@@ -145,10 +145,10 @@ window.COURSES = [
     url: "https://traildesbauges.wixsite.com/traildesbauges", signup: { expect: "≈ févr.", note: "2027 non annoncé — 2026 : dim. 5/07, ouverture ≈ février (njuko)" } },
   { id: "grand-raid-guillestrois-queyras", bloc: "juillet", weekend: "2027-07-03", name: "Grand Raid Guillestrois-Queyras", dept: "05", km: 48, dplus: 3200, tracks: ["100"],
     url: "https://grandraidduguillestrois-queyras.com/inscriptions/", signup: { expect: "≈ oct./déc.", note: "2–4/07/2027 (agenda office de tourisme) — Trail des Lacs 48 km, 60 € puis 65 € (sportips) ; ouverture ≈ oct./déc. ; ⚠️ jauge fermée sans liste d'attente" } },
-  { id: "tour-glaciers-vanoise",     bloc: "juillet", weekend: "2027-07-03", name: "Tour des Glaciers de la Vanoise", dept: "73", km: 41, dplus: 2850, tracks: ["100"],
-    url: "https://www.sibotrails.com/trail/tour-des-glaciers-de-la-vanoise/", signup: { expect: "≈ 19 oct.", note: "course « L'Incontournable » 41 km (le TGV fait 73 km) — 2026 : ouverture lun. 20 oct. 2025 → probable ~19 oct. 2026, se remplit vite" } },
+  { id: "tour-glaciers-vanoise",     bloc: "juillet", weekend: "2027-07-03", name: "Tour des Glaciers de la Vanoise – 41 km « L'Incontournable »", dept: "73", km: 41, dplus: 2850, tracks: ["100"],
+    url: "https://www.sibotrails.com/trail/tour-des-glaciers-de-la-vanoise/", signup: { open: "2026-10-25", note: "ouverture dim. 25 oct. 2026 à 18h — se remplit vite, être devant l'écran à l'heure ; course du dim. 4/07/2027 (le TGV fait 73 km)" } },
   { id: "tour-glaciers-vanoise-25",  bloc: "juillet", weekend: "2027-07-03", name: "Tour des Glaciers de la Vanoise – 25 km « Pralo vu du Ciel »", dept: "73", km: 25, dplus: 1750, tracks: ["40"],
-    url: "https://www.sibotrails.com/trail/tour-des-glaciers-de-la-vanoise/", signup: { expect: "≈ 19 oct.", note: "Pralognan — 2026 : dim. 5/07 8h, 30 € jusqu'au 30/04 ; ouverture 2026 lun. 20 oct. 2025 → probable ~19 oct. 2026, se remplit vite" } },
+    url: "https://www.sibotrails.com/trail/tour-des-glaciers-de-la-vanoise/", signup: { open: "2026-10-25", note: "ouverture dim. 25 oct. 2026 à 18h — se remplit vite ; Pralognan, dim. 4/07/2027 (2026 : départ 8h, 30 € jusqu'au 30/04)" } },
   /* Déplacée de « juin » → « juillet » le 22/09/2026 (signalé par Myriam) : l'édition 2026 a eu lieu le dim. 5 juillet */
   { id: "trail-hyeges-verdon",       bloc: "juillet", weekend: "2027-07-03", name: "Trail Hyèges Verdon",       dept: "04", km: 45, dplus: 2300, tracks: ["100"],
     url: "https://www.thvtrail.fr/", signup: { expect: "≈ févr./mars", note: "2026 : dim. 5/07 — ouverture ≈ fév./mars (sportips)" } }

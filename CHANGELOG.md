@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.6.2 — 18 octobre 2026
+- **Tour des Glaciers de la Vanoise** : la carte 0 to 100 devient « 41 km « L'Incontournable » » (même présentation que le 25 km « Pralo vu du Ciel »). Inscriptions : **ouverture dim. 25 oct. 2026 à 18h** (info transmise par Charles le 18/10), reportée aussi sur le 25 km. Course le dim. 4/07/2027 (site Sibotrails).
+
 ## 1.6.1 — 10 octobre 2026 (backend seulement)
 - Apps Script : routes de synchro du **calendrier 0 to 100** (`GET ?cal=`, `POST {type:"cal"}`, onglet `calendrier` créé à la volée). Routes existantes inchangées. Voir `backend/README.md`.
 
