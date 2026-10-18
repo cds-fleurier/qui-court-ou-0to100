@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.6.4 — 18 octobre 2026
+- **Trail du Circuit de la Sure** (dim. 6/06/2027, Voiron) : la carte 0 to 100 devient « 32 km « Les Balcons de la Sure » » (id `balcons-de-la-sure` inchangé) ; nouvelle carte **0 to 40 « 12 km « Le Tour de Vouise » »** (`tour-de-vouise-12`, 660 D+, site officiel).
+- Samuel l'avait saisie en « autre » (« Trail du circuit de la Sure ») → basculé sur `tour-de-vouise-12` après mise en ligne.
+- **Noms harmonisés** au format « Événement – N km « Nom de la course » » : 17 cartes renommées d'après les sites officiels (VO2 Suc, La Bosse à Bloc, Balcons du Ventoux, Marathon eXpérience, La CRRASSEUSE, Le Défi de Muhlbach, Marathon des Dentelles, La Grande Boucle, Défi de l'Ourdinse, Chalma'Rathon, Le Trail des Lacs…), formats remis entre guillemets (Quart de tOur du lac, Trail du Fort, Chalma'Classique), orthographes Mont Saint-Romain et Haute-Joux. Ids inchangés. Détail, noms non appliqués et écarts km/D+ relevés : `docs/noms_courses_2026-10-18.md`.
+
 ## 1.6.3 — 18 octobre 2026
 - **Trail des Grottes** (dim. 28/03/2027) : la carte 0 to 100 devient « 21 km « Grand Trail des Grottes » » (21 km au lieu de 20, id `trail-des-grottes` inchangé) ; nouvelle carte **0 to 40 « 10 km « Petit Trail des Grottes » »** (`trail-des-grottes-10`, 490 D+, départ 9h45 en 2026).
 - Samuel l'avait saisie en « autre » (« Trail des Grottes ») → basculé sur `trail-des-grottes-10` après mise en ligne.
