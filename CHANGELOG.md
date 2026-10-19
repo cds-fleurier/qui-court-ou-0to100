@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.7.0 — 19 octobre 2026
+- **Invité → vraie fiche automatique** : si l'identité mémorisée est un invité (`guest|<100|40>|<Prénom>`) et qu'une fiche du trombinoscope a le même groupe et le même prénom exact (casse et accents ignorés), « C'est moi » bascule tout seul sur la vraie fiche. Les choix faits en invité sont repris sous le vrai id (sans écraser un choix déjà fait) puis retirés de l'invité ; en cas d'échec réseau, nouvel essai au chargement suivant (`qco_guest_pending`). Même règle que le calendrier 3.3.0. Cas d'origine : Jérémy.
+- `APP_VERSION` remis en phase avec le cache-busting (`1.6.0` affiché depuis la 1.6.1).
+
 ## 1.6.6 — 18 octobre 2026
 Veille inscriptions du 18/10 (3 agents, 49 courses sans ouverture confirmée) → `docs/inscriptions_veille_2026-10-18.md`.
 - **Grand Raid Guillestrois-Queyras** : ouverture **dim. 1er nov. 2026 à 9h** (lue sur le formulaire registration4all, tous formats), Trail des Lacs sam. 3/07/2027 à 8h, 65 € puis 70 € au 1/02.

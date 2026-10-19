@@ -4,10 +4,11 @@
    (API_URL dans config.js). Sans API_URL → mode démo (localStorage).
    ──────────────────────────────────────────────────────────────────────────── */
 
-const APP_VERSION = "1.6.0";
+const APP_VERSION = "1.7.0";
 /* Identité partagée avec le calendrier et la carte (même origine → même localStorage) */
 const LS_ME      = "team_me";
 const LS_ME_OLD  = "qco_me";
+const LS_GUEST_PENDING = "qco_guest_pending"; // id invité dont les choix restent à reprendre
 const LS_FILTER  = "qco_filter";
 const LS_DEMO    = "qco_demo_choices";
 const LS_CACHE   = "qco_choices_cache";   // derniers choix connus, pour l'affichage hors ligne
@@ -45,6 +46,17 @@ function guestFromId(id) {
   return { id, name, group, photo: "", guest: true };
 }
 function person(id) { return byId[id] || guestFromId(id); }
+/* Invité ajouté depuis au trombinoscope : même groupe + même prénom exact (casse et accents
+   ignorés) → son vrai id. Pas de rapprochement sur le premier mot : un invité « Julien »
+   n'est pas forcément « Julien C ». Même règle que le calendrier. */
+function rosterMatchForGuest(id) {
+  const g = guestFromId(id);
+  if (!g) return null;
+  const n = normalize(g.name);
+  const pool = PARTICIPANTS.filter(p => p.group === g.group);
+  const exact = pool.filter(p => normalize(p.name) === n);
+  return exact.length === 1 ? exact[0] : null;
+}
 const courseById = Object.fromEntries(COURSES.map(c => [c.id, c]));
 const DEMO = !API_URL;
 
@@ -498,10 +510,34 @@ function bind() {
   setInterval(refresh, REFRESH_MS);
 }
 
+/* Reprend les choix faits en invité sous le vrai id (sans écraser un choix déjà fait
+   avec le vrai id), puis retire ceux de l'invité. Lancé sur l'appareil de la personne
+   après son ajout au trombinoscope ; l'id invité reste en attente jusqu'à la réussite. */
+async function migrateGuestChoices(oldId) {
+  if (DEMO || state.offline) return;
+  const old = state.choices.filter(c => c.participant === oldId && c.course);
+  if (!old.length) { localStorage.removeItem(LS_GUEST_PENDING); return; }
+  const post = payload => fetch(API_URL, { method: "POST", body: JSON.stringify(payload) }).then(r => r.json());
+  try {
+    for (const c of old) {
+      const taken = state.choices.some(x => x.participant === state.me && x.bloc === c.bloc && x.course);
+      if (!taken) await post({ participant: state.me, bloc: c.bloc, course: c.course, note: c.note || "" });
+      const data = await post({ participant: oldId, bloc: c.bloc, course: "", note: "" });
+      if (data && Array.isArray(data.choices)) state.choices = data.choices;
+    }
+    localStorage.removeItem(LS_GUEST_PENDING);
+    toast("Tes choix d'invité sont maintenant sous ton prénom.");
+  } catch (err) {
+    console.error(err); // nouvel essai au prochain chargement
+  }
+}
+
 /* ─── Init ─────────────────────────────────────────────────────────────────── */
 (async function init() {
   state.me = localStorage.getItem(LS_ME) || localStorage.getItem(LS_ME_OLD) || null;
   if (state.me && !person(state.me)) state.me = null;
+  const upgraded = state.me && rosterMatchForGuest(state.me);
+  if (upgraded) { localStorage.setItem(LS_GUEST_PENDING, state.me); state.me = upgraded.id; }
   if (state.me) { localStorage.setItem(LS_ME, state.me); localStorage.removeItem(LS_ME_OLD); }
   state.filter = localStorage.getItem(LS_FILTER) || (state.me && person(state.me)?.group) || "all";
   if (!["all", "100", "40"].includes(state.filter)) state.filter = "all";
@@ -510,5 +546,7 @@ function bind() {
   bind();
   render();
   await loadChoices();
+  const guestPending = localStorage.getItem(LS_GUEST_PENDING);
+  if (guestPending && state.me) await migrateGuestChoices(guestPending);
   render();
 })();
