@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.7.1 — 26 octobre 2026
+- **Tour des Glaciers de la Vanoise** (41 km « L'Incontournable » et 25 km « Pralo vu du Ciel ») : inscriptions **ouvertes** depuis le 25/10 à 18h, lues sur la plateforme as2pic (dossard déjà validé côté team). Lien des cartes vers la page d'inscription. 41 km : 60 € + frais, départ 5h, 249 places restantes au 26/10 ; 25 km : 30 € + frais, départ 7h, 388 places restantes ; le 73 km est déjà complet.
+
 ## 1.7.0 — 19 octobre 2026
 - **Invité → vraie fiche automatique** : si l'identité mémorisée est un invité (`guest|<100|40>|<Prénom>`) et qu'une fiche du trombinoscope a le même groupe et le même prénom exact (casse et accents ignorés), « C'est moi » bascule tout seul sur la vraie fiche. Les choix faits en invité sont repris sous le vrai id (sans écraser un choix déjà fait) puis retirés de l'invité ; en cas d'échec réseau, nouvel essai au chargement suivant (`qco_guest_pending`). Même règle que le calendrier 3.3.0. Cas d'origine : Jérémy.
 - `APP_VERSION` remis en phase avec le cache-busting (`1.6.0` affiché depuis la 1.6.1).
