@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.9.0 — 26 octobre 2026
+- **« 🎟️ J'ai mon dossard »** (demande des participants) : bouton sous « J'y vais ✓ » sur sa course, pour chaque bloc et aussi pour une « autre course ». Toute la team voit 🎟️ à côté du prénom, dans le résumé perso et dans le compteur du bloc (« 🎟️ N dossards »). La case retombe si on change de course.
+- Backend : 7e colonne `dossard` dans l'onglet `choix`, route `POST {type:"dossard"}`, `features:["dossard"]` dans le GET. **Le bouton n'apparaît qu'avec le nouveau script** (un ancien script prendrait l'envoi pour un retrait de course).
+
 ## 1.8.0 — 26 octobre 2026
 Veille du 26/10 (27 courses, 3 agents, ouvertures et complets revérifiés sur les plateformes) → `docs/inscriptions_veille_2026-10-26.md`.
 - Nouveau statut `signup.status: "full"` → pastille **« Complet »** (rouge clair).

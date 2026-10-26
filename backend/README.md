@@ -44,12 +44,13 @@ Après une modification de `Code.gs` : **Déployer → Gérer les déploiements 
 
 ## Onglet `choix` (état courant)
 
-| participant | bloc | course | note | updated_at | validated |
-|---|---|---|---|---|---|
-| `id` de `data/participants.js` | `noel` · `mars` · `juin` · `juillet` | `id` de `data/courses.js`, ou `autre` | nom libre si `autre` | date | à cocher par le staff (`1`, `oui`, `x`, `✓`, ou case à cocher) |
+| participant | bloc | course | note | updated_at | validated | dossard |
+|---|---|---|---|---|---|---|
+| `id` de `data/participants.js` | `noel` · `mars` · `juin` · `juillet` | `id` de `data/courses.js`, ou `autre` | nom libre si `autre` | date | à cocher par le staff (`1`, `oui`, `x`, `✓`, ou case à cocher) | `1` = dossard acheté (coché par le coureur dans l'app, ou par le staff) |
 
 - Le staff peut **éditer directement** le Sheet (corriger, valider, supprimer une ligne).
-- La colonne `validated` est réinitialisée automatiquement si le participant change de course.
+- Les colonnes `validated` et `dossard` sont réinitialisées automatiquement si le participant change de course.
+- `dossard` (26/10/2026) : `POST { type:"dossard", participant, bloc, value:true|false }` ; l'en-tête de la colonne G est ajouté au premier usage. Le GET renvoie `features:["dossard"]` : l'app n'affiche le bouton que si ce marqueur est présent.
 - L'onglet `journal` garde l'historique complet (qui a changé quoi, quand).
 
 ## Invité qui entre ensuite dans le trombinoscope

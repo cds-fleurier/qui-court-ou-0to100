@@ -5,9 +5,14 @@
  *   choix   : état courant, une ligne par (participant, bloc)
  *   journal : historique de toutes les modifications (append only)
  *
- * GET  → { ok, choices:[...], generatedAt }
+ * GET  → { ok, choices:[...], generatedAt, features:["dossard"] }
  * POST → body JSON { participant, bloc, course, note }  (course "" = retirer)
  *        → { ok, choices:[...] }
+ * POST { type:"dossard", participant, bloc, value:true|false }  (26/10/2026)
+ *        → coche « dossard acheté » sur le choix existant → { ok, choices:[...] }
+ *        Le choix change de course → la case retombe (comme validated).
+ *        `features` dans le GET : le site n'affiche le bouton que si le script le gère
+ *        (un ancien script prendrait ce POST pour un retrait de course).
  *
  * Calendrier 0 to 100 (synchro des jours cochés entre appareils, v2 du 10/10/2026) :
  *   onglet calendrier : une ligne par (participant, track, scenario), done = JSON {"AAAA-MM-JJ": bool}
@@ -20,7 +25,7 @@
 
 const SHEET_CHOIX   = "choix";
 const SHEET_JOURNAL = "journal";
-const HEADERS       = ["participant", "bloc", "course", "note", "updated_at", "validated"];
+const HEADERS       = ["participant", "bloc", "course", "note", "updated_at", "validated", "dossard"];
 const BLOCS_OK      = ["noel", "mars", "juin", "juillet"];
 const SHEET_CAL     = "calendrier";
 const CAL_HEADERS   = ["participant", "track", "scenario", "done", "updated_at"];
@@ -48,13 +53,14 @@ function doGet(e) {
     try { return json({ ok: true, cal: readCal(clean(calFor, 60)) }); }
     catch (err) { return json({ ok: false, error: String(err) }); }
   }
-  return json({ ok: true, choices: readChoices(), generatedAt: new Date().toISOString() });
+  return json({ ok: true, choices: readChoices(), generatedAt: new Date().toISOString(), features: ["dossard"] });
 }
 
 function doPost(e) {
   try {
     const body = JSON.parse((e && e.postData && e.postData.contents) || "{}");
     if (body.type === "cal") return json(calPatch(body));
+    if (body.type === "dossard") return json(setDossard(body));
     const participant = clean(body.participant, 40);
     const bloc = clean(body.bloc, 20);
     const course = clean(body.course, 80);
@@ -95,7 +101,8 @@ function readChoices() {
       course: String(r[2]),
       note: String(r[3] || ""),
       updated_at: r[4] instanceof Date ? r[4].toISOString() : String(r[4] || ""),
-      validated: r[5] === true ? "1" : String(r[5] || "")
+      validated: r[5] === true ? "1" : String(r[5] || ""),
+      dossard: isChecked(r[6]) ? "1" : ""
     }));
 }
 
@@ -121,10 +128,44 @@ function upsert(participant, bloc, course, note) {
   // Le choix change → la validation staff tombe ; même choix → on la garde.
   const same = previous && String(previous[2]) === course && String(previous[3] || "") === note;
   const validated = same ? previous[5] : "";
-  const values = [[participant, bloc, course, note, now, validated]];
+  const dossard = same ? previous[6] : "";
+  const values = [[participant, bloc, course, note, now, validated, dossard]];
   if (rowIndex > 0) sh.getRange(rowIndex, 1, 1, HEADERS.length).setValues(values);
   else sh.appendRow(values[0]);
   log(now, participant, bloc, course, note, rowIndex > 0 ? "modif" : "ajout");
+}
+
+/* Case « dossard » : 1, true, oui, x, ✓ ou case à cocher Google Sheets. */
+function isChecked(v) {
+  return v === true || /^(1|true|oui|x|ok|yes|✓)$/i.test(String(v == null ? "" : v).trim());
+}
+
+function setDossard(body) {
+  const participant = clean(body.participant, 60);
+  const bloc = clean(body.bloc, 20);
+  if (!participant || BLOCS_OK.indexOf(bloc) === -1) return { ok: false, error: "participant et bloc requis" };
+  const value = body.value === true;
+  const lock = LockService.getScriptLock();
+  lock.waitLock(8000);
+  try {
+    const sh = sheet(SHEET_CHOIX);
+    // Feuilles créées avant le 26/10/2026 : l'en-tête de la 7e colonne manque.
+    if (!String(sh.getRange(1, 7).getValue())) sh.getRange(1, 7).setValue("dossard").setFontWeight("bold");
+    const last = sh.getLastRow();
+    let rowIndex = -1, course = "";
+    if (last >= 2) {
+      const rows = sh.getRange(2, 1, last - 1, 3).getValues();
+      for (let i = 0; i < rows.length; i++) {
+        if (String(rows[i][0]) === participant && String(rows[i][1]) === bloc) { rowIndex = i + 2; course = String(rows[i][2]); break; }
+      }
+    }
+    if (rowIndex < 0) return { ok: false, error: "pas de course choisie pour ce bloc" };
+    sh.getRange(rowIndex, 7).setValue(value ? "1" : "");
+    log(new Date(), participant, bloc, course, "", value ? "dossard" : "dossard retiré");
+  } finally {
+    lock.releaseLock();
+  }
+  return { ok: true, choices: readChoices() };
 }
 
 function log(at, participant, bloc, course, note, action) {

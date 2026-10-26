@@ -4,7 +4,7 @@
    (API_URL dans config.js). Sans API_URL → mode démo (localStorage).
    ──────────────────────────────────────────────────────────────────────────── */
 
-const APP_VERSION = "1.8.0";
+const APP_VERSION = "1.9.0";
 /* Identité partagée avec le calendrier et la carte (même origine → même localStorage) */
 const LS_ME      = "team_me";
 const LS_ME_OLD  = "qco_me";
@@ -20,7 +20,8 @@ const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 const state = {
   me: null,            // id participant
   filter: "all",       // "all" | "100" | "40"
-  choices: [],         // [{ participant, bloc, course, note, updated_at, validated }]
+  choices: [],         // [{ participant, bloc, course, note, updated_at, validated, dossard }]
+  dossardOk: false,    // le script du Sheet gère « dossard acheté » (features du GET) — sinon pas de bouton
   loading: false,
   saving: null,        // bloc en cours d'enregistrement
   otherOpen: {},       // bloc → true quand le champ « autre course » est ouvert
@@ -140,9 +141,12 @@ function runnersOn(blocId, courseId, note) {
   const key = normalize(note);
   return state.choices
     .filter(c => c.bloc === blocId && c.course === courseId && (courseId !== OTHER_COURSE || normalize(c.note) === key))
-    .map(c => person(c.participant)).filter(Boolean)
+    .map(c => { const p = person(c.participant); return p && { ...p, dossard: hasDossard(c) }; }).filter(Boolean)
     .filter(isVisible)
     .sort((a, b) => a.name.localeCompare(b.name, "fr"));
+}
+function hasDossard(choice) {
+  return Boolean(choice) && /^(1|true|oui|x|ok|yes|✓)$/i.test(String(choice.dossard || "").trim());
 }
 function undecided(blocId) {
   return PARTICIPANTS.filter(p => isVisible(p) && !choiceOf(p.id, blocId));
@@ -165,15 +169,16 @@ async function loadChoices({ silent = false } = {}) {
     // Un « J'y vais » est parti pendant ce chargement : sa réponse fait foi, pas celle-ci
     if (state.savedAt > startedAt) return;
     state.choices = data.choices || [];
+    state.dossardOk = Array.isArray(data.features) && data.features.includes("dossard");
     state.lastSync = new Date();
     state.offline = false;
-    try { localStorage.setItem(LS_CACHE, JSON.stringify({ at: Date.now(), choices: state.choices })); } catch { /* plein */ }
+    try { localStorage.setItem(LS_CACHE, JSON.stringify({ at: Date.now(), choices: state.choices, dossardOk: state.dossardOk })); } catch { /* plein */ }
   } catch (err) {
     console.error(err);
     state.offline = true;
     try {
       const cached = JSON.parse(localStorage.getItem(LS_CACHE) || "null");
-      if (cached && Array.isArray(cached.choices)) { state.choices = cached.choices; state.lastSync = new Date(cached.at); }
+      if (cached && Array.isArray(cached.choices)) { state.choices = cached.choices; state.dossardOk = Boolean(cached.dossardOk); state.lastSync = new Date(cached.at); }
     } catch { /* pas de cache */ }
     if (!silent) toast("Connexion impossible — affichage des derniers choix connus.", "err");
   } finally {
@@ -219,6 +224,44 @@ async function saveChoice(blocId, courseId, note = "") {
   }
 }
 
+/* « J'ai mon dossard » : se coche sur SON choix du bloc, visible par toute la team.
+   Retombe tout seul si on change de course (côté script). */
+async function saveDossard(blocId, value) {
+  const mine = state.me && choiceOf(state.me, blocId);
+  if (!mine || (!DEMO && !state.dossardOk)) return;
+  const before = state.choices;
+  state.choices = before.map(c => (c === mine ? { ...c, dossard: value ? "1" : "" } : c));
+  state.saving = blocId;
+  state.savedAt = Date.now();
+  render();
+  if (DEMO) {
+    localStorage.setItem(LS_DEMO, JSON.stringify(state.choices));
+    state.saving = null;
+    render();
+    return;
+  }
+  try {
+    const res = await fetch(API_URL, { method: "POST", body: JSON.stringify({ type: "dossard", participant: state.me, bloc: blocId, value }) });
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.error || "échec enregistrement");
+    if (Array.isArray(data.choices)) state.choices = data.choices;
+    toast(value ? "🎟️ Dossard noté, bravo !" : "Dossard retiré.");
+  } catch (err) {
+    console.error(err);
+    state.choices = before;
+    toast("Enregistrement impossible — réessaie.", "err");
+  } finally {
+    state.saving = null;
+    render();
+  }
+}
+
+function dossardButton(blocId, choice) {
+  if (!choice || (!DEMO && !state.dossardOk)) return "";
+  const on = hasDossard(choice);
+  return `<button class="btn btn--dossard ${on ? "btn--dossard-on" : ""}" data-act="dossard" data-bloc="${blocId}" data-value="${on ? "0" : "1"}" ${state.saving === blocId ? "disabled" : ""}>${on ? "🎟️ Dossard ✓" : "🎟️ J'ai mon dossard"}</button>`;
+}
+
 /* ─── Rendu ────────────────────────────────────────────────────────────────── */
 function renderMeSelect() {
   const sel = $("#me-select");
@@ -252,7 +295,7 @@ function renderMeSummary() {
       label = c.course === OTHER_COURSE ? (c.note || "Autre course") : (courseById[c.course]?.name || c.course);
       if (c.course === OTHER_COURSE) cls += " mchip--other";
     }
-    return `<a class="mchip ${cls}" href="#bloc-${b.id}"><span class="mchip-bloc">${b.emoji} ${esc(b.label)}</span><span class="mchip-course">${esc(label)}</span></a>`;
+    return `<a class="mchip ${cls}" href="#bloc-${b.id}"><span class="mchip-bloc">${b.emoji} ${esc(b.label)}</span><span class="mchip-course">${esc(label)}${hasDossard(c) ? " 🎟️" : ""}</span></a>`;
   }).join("");
   const done = BLOCS.filter(b => choiceOf(me.id, b.id)).length;
   box.innerHTML = `
@@ -267,7 +310,7 @@ function avatarsRow(people, { max = 8 } = {}) {
   const rest = people.length - shown.length;
   return `<div class="runners">
     <div class="ava-stack">${shown.map(p => avatar(p)).join("")}${rest > 0 ? `<span class="ava ava--more">+${rest}</span>` : ""}</div>
-    <div class="runner-names">${people.map(p => esc(p.name)).join(", ")}</div>
+    <div class="runner-names">${people.map(p => esc(p.name) + (p.dossard ? ' <span class="dossard" title="dossard acheté">🎟️</span>' : "")).join(", ")}</div>
   </div>`;
 }
 
@@ -296,7 +339,7 @@ function courseCard(course, blocId, meChoice, homonyms = new Set()) {
   const me = state.me && person(state.me);
   const allowed = me && course.tracks.includes(me.group);
   const action = allowed ? (isMine
-    ? `<button class="btn btn--on" data-act="clear" data-bloc="${blocId}" ${state.saving === blocId ? "disabled" : ""}>J'y vais ✓</button>`
+    ? `<button class="btn btn--on" data-act="clear" data-bloc="${blocId}" ${state.saving === blocId ? "disabled" : ""}>J'y vais ✓</button>${dossardButton(blocId, meChoice)}`
     : `<button class="btn" data-act="pick" data-bloc="${blocId}" data-course="${esc(course.id)}" ${state.saving === blocId ? "disabled" : ""}>J'y vais</button>`) : "";
   return `<article class="course ${isMine ? "course--mine" : ""} ${runners.length ? "course--busy" : ""}" id="course-${esc(course.id)}">
     <div class="course-top">
@@ -331,7 +374,7 @@ function otherCards(bloc, meChoice) {
     /* Hors liste : « à valider » tant que le staff n'a pas coché la ligne dans le Sheet */
     const validated = isMine && /^(1|true|oui|x|ok|yes|✓)$/i.test(String(meChoice.validated || "").trim());
     const action = state.me ? (isMine
-      ? `<button class="btn btn--on" data-act="clear" data-bloc="${bloc.id}">J'y vais ✓</button>`
+      ? `<button class="btn btn--on" data-act="clear" data-bloc="${bloc.id}">J'y vais ✓</button>${dossardButton(bloc.id, meChoice)}`
       : `<button class="btn" data-act="pick" data-bloc="${bloc.id}" data-course="${OTHER_COURSE}" data-note="${esc(g.note)}">J'y vais</button>`) : "";
     cards.push(`<article class="course course--other ${isMine ? "course--mine" : ""}">
       <div class="course-top">
@@ -370,6 +413,7 @@ function renderBlocs() {
     const kmLabel = tracks.map(t => `<span class="chip chip--${t}">0 to ${t} · ${esc(bloc.km[t])}</span>`).join("");
     const pending = undecided(bloc.id);
     const chosen = PARTICIPANTS.filter(p => isVisible(p) && choiceOf(p.id, bloc.id)).length;
+    const bibs = PARTICIPANTS.filter(p => isVisible(p) && hasDossard(choiceOf(p.id, bloc.id))).length;
 
     // Homonymes calculés sur tout le bloc, quel que soit le filtre : le titre ne change pas selon la vue
     const titles = COURSES.filter(c => c.bloc === bloc.id).map(c => splitName(c.name, c.format).title);
@@ -394,7 +438,7 @@ function renderBlocs() {
         </div>
         <div class="bloc-km">${kmLabel}</div>
       </header>
-      <div class="bloc-stat">${chosen} inscrit${chosen > 1 ? "s" : ""} · ${pending.length} sans choix</div>
+      <div class="bloc-stat">${chosen} inscrit${chosen > 1 ? "s" : ""}${bibs ? ` · 🎟️ ${bibs} dossard${bibs > 1 ? "s" : ""}` : ""} · ${pending.length} sans choix</div>
       ${weekends}${empty}
       ${otherCards(bloc, meChoice)}
       <div class="bloc-actions">${otherForm(bloc, meChoice)}${meClear}</div>
@@ -475,6 +519,7 @@ function bind() {
     const { act, bloc, course, note } = btn.dataset;
     if (act === "pick") saveChoice(bloc, course, note || "");
     else if (act === "clear") saveChoice(bloc, "", "");
+    else if (act === "dossard") saveDossard(bloc, btn.dataset.value === "1");
     else if (act === "other-open") { state.otherOpen[bloc] = true; render(); $(`.other-form[data-bloc="${bloc}"] input`)?.focus(); }
     else if (act === "other-close") { state.otherOpen[bloc] = false; render(); }
   });

@@ -16,6 +16,10 @@ Fait partie de l'écosystème team UTMB avec le
 2. Dans chaque bloc, « J'y vais » sur une course de la liste — ou « Autre course » (hors
    liste, à faire valider par le staff).
 3. Tout le monde voit tout, tout de suite (rafraîchi au retour sur l'onglet et toutes les 90 s).
+4. Une fois le dossard acheté : « 🎟️ J'ai mon dossard » sous « J'y vais ✓ » (v1.9.0). Le 🎟️ s'affiche à côté du
+   prénom, dans le résumé perso et dans le compteur du bloc. Il retombe tout seul si on change de course. Le bouton
+   n'apparaît que si le script du Sheet annonce `features: ["dossard"]` : un script plus ancien prendrait l'envoi
+   pour un retrait de course.
 
 Les choix sont stockés dans un **Google Sheet** via Apps Script → voir `backend/README.md`.
 Sans `API_URL` (config.js), l'app tourne en **mode démo** (localStorage).

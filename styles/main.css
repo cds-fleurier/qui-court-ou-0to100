@@ -218,7 +218,7 @@ button { font: inherit; }
 .course--other { border-style: dashed; padding-bottom: 12px; }
 .course-top { display: flex; gap: 10px; align-items: flex-start; }
 .course-head { flex: 1; min-width: 0; }
-.course-side { flex: none; display: flex; align-items: center; }
+.course-side { flex: none; display: flex; flex-direction: column; align-items: stretch; gap: 6px; }
 .course-side .btn { padding: 6px 12px; }
 .course-title { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 .cname { font-weight: 800; font-size: 15px; line-height: 1.25; }
@@ -300,6 +300,9 @@ button { font: inherit; }
 .btn:disabled { opacity: .5; cursor: progress; }
 .btn--on { background: var(--ok-soft); border-color: rgba(61, 220, 132, 0.55); color: #bff5d6; }
 .btn--on:hover { background: rgba(255, 92, 92, 0.15); border-color: rgba(255, 92, 92, 0.5); color: #ffb3b3; }
+.btn--dossard { background: transparent; border-color: var(--gold-soft); border-style: dashed; color: #ffe08a; font-weight: 600; font-size: 12px; }
+.btn--dossard-on { background: var(--gold-soft); border-style: solid; border-color: rgba(245, 197, 24, 0.55); font-weight: 800; }
+.dossard { font-size: 0.95em; }
 .btn--ghost { background: transparent; border-color: var(--border-hi); color: var(--text-soft); font-weight: 600; }
 .btn--ghost:hover { color: var(--text); background: rgba(255,255,255,.05); }
 .btn--sm { padding: 6px 10px; font-size: 12px; }
