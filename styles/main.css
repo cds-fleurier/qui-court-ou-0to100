@@ -144,7 +144,10 @@ button { font: inherit; }
   min-width: 0;
 }
 .mchip-bloc { font-size: 11px; color: var(--text-soft); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
-.mchip-course { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mchip-line { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.mchip-course { flex: 1 1 auto; min-width: 0; font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* 🎟️ hors du titre : reste visible quand le nom de la course est coupé en « … » */
+.mchip-bib { flex: none; font-size: 13px; }
 .mchip--todo .mchip-course { color: var(--text-muted); font-style: italic; }
 .mchip--ok { border-color: rgba(61, 220, 132, 0.35); background: var(--ok-soft); }
 .mchip--ok .mchip-course { color: #bff5d6; }

@@ -4,7 +4,7 @@
    (API_URL dans config.js). Sans API_URL → mode démo (localStorage).
    ──────────────────────────────────────────────────────────────────────────── */
 
-const APP_VERSION = "1.9.3";
+const APP_VERSION = "1.9.4";
 /* Identité partagée avec le calendrier et la carte (même origine → même localStorage) */
 const LS_ME      = "team_me";
 const LS_ME_OLD  = "qco_me";
@@ -295,7 +295,7 @@ function renderMeSummary() {
       label = c.course === OTHER_COURSE ? (c.note || "Autre course") : (courseById[c.course]?.name || c.course);
       if (c.course === OTHER_COURSE) cls += " mchip--other";
     }
-    return `<a class="mchip ${cls}" href="#bloc-${b.id}"><span class="mchip-bloc">${b.emoji} ${esc(b.label)}</span><span class="mchip-course">${esc(label)}${hasDossard(c) ? " 🎟️" : ""}</span></a>`;
+    return `<a class="mchip ${cls}" href="#bloc-${b.id}"><span class="mchip-bloc">${b.emoji} ${esc(b.label)}</span><span class="mchip-line"><span class="mchip-course">${esc(label)}</span>${hasDossard(c) ? '<span class="mchip-bib" title="dossard acheté">🎟️</span>' : ""}</span></a>`;
   }).join("");
   const done = BLOCS.filter(b => choiceOf(me.id, b.id)).length;
   box.innerHTML = `

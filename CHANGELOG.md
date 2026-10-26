@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.9.4 — 26 octobre 2026
+- Mobile : dans le résumé perso, le 🎟️ disparaissait avec la fin d'un nom de course trop long (coupé en « … »). Il est maintenant à part, toujours visible à droite de la pastille.
+
 ## 1.9.3 — 26 octobre 2026
 - Nouvelle carte 0 to 40 **EcoTrail de Paris – 10 km** (`ecotrail-paris-10`) : dim. 21/03/2027 à 10h30, boucle au départ du Domaine national de Saint-Cloud, 10,2 km, 170 m D+, 37 € sur njuko. Lucie l'avait saisie en « autre » (« Eco Trail ») → basculée dessus après la mise en ligne, à la demande de l'utilisateur.
 - **EcoTrail de Paris – 30 km : complet** (njuko, 0 dossard restant ; 45 et 80 km complets aussi). Lien de la carte vers la plateforme.
