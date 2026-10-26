@@ -4,7 +4,7 @@
    (API_URL dans config.js). Sans API_URL → mode démo (localStorage).
    ──────────────────────────────────────────────────────────────────────────── */
 
-const APP_VERSION = "1.7.1";
+const APP_VERSION = "1.8.0";
 /* Identité partagée avec le calendrier et la carte (même origine → même localStorage) */
 const LS_ME      = "team_me";
 const LS_ME_OLD  = "qco_me";
@@ -92,6 +92,7 @@ function signupInfo(course) {
   if (sg.close && day(sg.close) < today) {
     return sg.waitlist ? { cls: "wait", text: "Liste d'attente" } : { cls: "closed", text: "Closes" };
   }
+  if (sg.status === "full") return { cls: "full", text: "Complet" };
   if (sg.status === "waitlist") return { cls: "wait", text: "Liste d'attente" };
   if (sg.open) {
     const days = Math.round((day(sg.open) - today) / 86400000);

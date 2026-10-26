@@ -241,6 +241,7 @@ button { font: inherit; }
 .pill--soon   { background: var(--warn-soft); color: #ffd79a; }
 .pill--wait   { background: var(--warn-soft); color: #ffd79a; }
 .pill--closed { color: var(--text-muted); text-decoration: line-through; }
+.pill--full   { background: rgba(255, 90, 90, .14); color: #ffb3b3; }
 
 .cinfo summary {
   list-style: none; cursor: pointer; display: inline-block;

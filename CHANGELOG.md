@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.8.0 — 26 octobre 2026
+Veille du 26/10 (27 courses, 3 agents, ouvertures et complets revérifiés sur les plateformes) → `docs/inscriptions_veille_2026-10-26.md`.
+- Nouveau statut `signup.status: "full"` → pastille **« Complet »** (rouge clair).
+- **Trail du Ventoux – Balcons 29 km : complet** (1 026 inscrits pour 950 places).
+- **MaXi-Race** (42 et 20 km) : tirage terminé, complet → liste d'attente (sportips), Marathon le dim. 30/05.
+- Ouvertes : **Corrida-Trail Ambarroise** 10 et 5 km (njuko, dim. 20/12), **Trail de la Guigne**, **Verdon**, **Transju'Trails** 42 et 15 km (liens directs vers les plateformes, prix et places).
+- **Trail du Facteur** : sam. 19/12 à Hauterives, 17,2 km, ⚠️ sans doute déjà plein.
+- **Nocturne du Cœur** : ouverture le 2/11 à 7h. **Fadarelles** : pré-inscription sur le site de l'orga, paiement sur place. **Chambles** : 27/12 confirmé.
+- **Trail des Citadelles** : ⚠️ plus de relais 40 km en 2027 (40 km solo, relais à 4 sur le 73 km) — note sur les deux cartes, à revoir avec le staff ; calendrier des ouvertures 1/11 → 11/11.
+- Estimations d'ouverture précisées (Piqueurs, Sanglier, Garlaban, Mont Saint-Romain, Grottes, Retournacois, Marcaires).
+
 ## 1.7.1 — 26 octobre 2026
 - **Tour des Glaciers de la Vanoise** (41 km « L'Incontournable » et 25 km « Pralo vu du Ciel ») : inscriptions **ouvertes** depuis le 25/10 à 18h, lues sur la plateforme as2pic (dossard déjà validé côté team). Lien des cartes vers la page d'inscription. 41 km : 60 € + frais, départ 5h, 249 places restantes au 26/10 ; 25 km : 30 € + frais, départ 7h, 388 places restantes ; le 73 km est déjà complet.
 
