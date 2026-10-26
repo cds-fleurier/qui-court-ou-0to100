@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.9.2 — 26 octobre 2026
+- **Traversée des Dentelles – 42 km « Marathon des Dentelles »** : inscriptions **ouvertes** (un dossard déjà acheté dans la team, confirmé sur la billetterie Finishers : « Réserver » actif). Dim. 6/06/2027 à 5h30, 52 € + frais. Le lien de la carte mène à la billetterie. La carte quitte le statut « liste d'attente ».
+
 ## 1.9.1 — 26 octobre 2026
 - **Trail des Citadelles** : les deux cartes deviennent « Relais 73 km à 4, tronçon 27 km » (0 to 100) et « tronçon 15 km » (0 to 40). Le relais du 73 km se court uniquement à 4, avec des sections de 15 à 27 km (blog officiel). Il n'y a pas de relais sur 40 km en 2027. Alice et Milène (« Mims ») font équipe avec 2 autres coureurs. Ouverture le mer. 11/11 à 15h, 88 € par équipe. Ids inchangés.
 
