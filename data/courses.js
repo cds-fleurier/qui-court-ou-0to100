@@ -62,9 +62,11 @@ window.COURSES = [
     url: "https://in.njuko.com/trail-du-ventoux-20271786456525480?currentPage=select-competition", signup: { status: "full", note: "⛔ Balcons du Ventoux 29 km COMPLET (1 026 inscrits pour 950 places, njuko 26/10) — ouvert le 3/10 à 8h ; dim. 21/03/2027. L'Origine 48 km, l'Intégrale et le Sprint sont complets aussi ; restaient quelques places sur l'Évasion 64 km et l'Ultra 105 km" } },
   /* EcoTrail : deux formats, deux jours différents → deux courses distinctes */
   { id: "ecotrail-paris-30",         bloc: "mars", weekend: "2027-03-20", date: "2027-03-20", name: "EcoTrail de Paris – 30 km", dept: "75", km: 29.5, dplus: 500, tracks: ["100"],
-    url: "https://www.ecotrailparis.com/course/trail-30-km", signup: { status: "open", note: "3 500 places, distance la plus demandée (njuko)" } },
+    url: "https://in.njuko.com/salomon-ecotrail-paris-printemps-2027?currentPage=select-competition", signup: { status: "full", note: "⛔ COMPLET sur njuko au 26/10 (0 dossard restant sur 3 500) — revente de dossards annoncée (« être prévenu ») ; sam. 20/03/2027 à 8h30. Le 22 km (58 €) et le 35 km restent ouverts" } },
   { id: "ecotrail-paris-22",         bloc: "mars", weekend: "2027-03-20", date: "2027-03-21", name: "EcoTrail de Paris – 22 km", dept: "75", km: 22,   dplus: 550, tracks: ["100"],
     url: "https://www.ecotrailparis.com/course/trail-20-km", signup: { status: "open", note: "sur njuko" } },
+  { id: "ecotrail-paris-10",         bloc: "mars", weekend: "2027-03-20", date: "2027-03-21", name: "EcoTrail de Paris – 10 km", dept: "92", km: 10.2, dplus: 170, tracks: ["40"],
+    url: "https://in.njuko.com/salomon-ecotrail-paris-printemps-2027?currentPage=select-competition", signup: { status: "open", note: "« l'initiation au trail » de l'EcoTrail : dim. 21/03/2027, départ 10h30 du Domaine national de Saint-Cloud (boucle) — ouvertes sur njuko, 37 € + frais (2e palier au 26/10), 2 500 places" } },
   { id: "trail-mont-st-romain",      bloc: "mars", weekend: "2027-03-20", name: "Trail du Mont Saint-Romain",   dept: "71", km: 30, dplus: 1000, tracks: ["100"],
     url: "https://trail-mont-saint-romain.fr/", signup: { expect: "≈ mi-déc.", note: "2027 pas encore sur yaka au 26/10 — 2026 : ouverture le 19/12/2025 vers 12h (13 à 28 €)" } },
   { id: "sktrail",                   bloc: "mars", weekend: "2027-03-20", name: "SKTRAIL",                   dept: "64", km: 22, dplus: 1500, tracks: ["100"],

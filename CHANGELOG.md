@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.9.3 — 26 octobre 2026
+- Nouvelle carte 0 to 40 **EcoTrail de Paris – 10 km** (`ecotrail-paris-10`) : dim. 21/03/2027 à 10h30, boucle au départ du Domaine national de Saint-Cloud, 10,2 km, 170 m D+, 37 € sur njuko. Lucie l'avait saisie en « autre » (« Eco Trail ») → basculée dessus après la mise en ligne, à la demande de l'utilisateur.
+- **EcoTrail de Paris – 30 km : complet** (njuko, 0 dossard restant ; 45 et 80 km complets aussi). Lien de la carte vers la plateforme.
+
 ## 1.9.2 — 26 octobre 2026
 - **Traversée des Dentelles – 42 km « Marathon des Dentelles »** : inscriptions **ouvertes** (un dossard déjà acheté dans la team, confirmé sur la billetterie Finishers : « Réserver » actif). Dim. 6/06/2027 à 5h30, 52 € + frais. Le lien de la carte mène à la billetterie. La carte quitte le statut « liste d'attente ».
 
