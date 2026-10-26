@@ -20,7 +20,7 @@
 - Guillestrois-Queyras : ouverture du 1/11 à 9h reconfirmée sur registration4all.
 
 ## À décider (non appliqué)
-- **Trail des Citadelles** : en 2027, **il n'y a plus de relais sur 40 km**. Le 40 km est une course individuelle (37 €, ouverture le 8/11 à 15h). Le seul relais est le 73 km à 4 (ouverture mer. 11/11 à 15h). Autres ouvertures : 10 km le 1/11 à 15h, 26 km le 1/11 à 17h, 58 km le 8/11 à 17h. Nos deux cartes « Relais 40 km, tronçon 27/15 km » ne correspondent plus. **Décision (26/10) : l'utilisateur en parle d'abord au staff** ; en attendant, note ⚠️ sur les deux cartes et lien vers chrono-start.
+- **Trail des Citadelles** : en 2027, **il n'y a plus de relais sur 40 km**. Le 40 km est une course individuelle (37 €, ouverture le 8/11 à 15h). Le seul relais est le 73 km à 4 (ouverture mer. 11/11 à 15h). Autres ouvertures : 10 km le 1/11 à 15h, 26 km le 1/11 à 17h, 58 km le 8/11 à 17h. Nos deux cartes « Relais 40 km, tronçon 27/15 km » ne correspondent plus. **Réglé le 26/10 (v1.9.1)** : Alice fait le relais 73 km à 4 avec Mims (0 to 40) et 2 autres coureurs → cartes renommées « Relais 73 km à 4, tronçon 27 / 15 km » (sections de 15 à 27 km selon le blog), ouverture le 11/11 à 15h.
 - **Trail de Noël (Dampierre-sur-Linotte)** : rien de publié pour 2026. Le site parle de « Trail des Dolines » (2025).
 
 ## Rien de neuf

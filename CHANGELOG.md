@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.9.1 — 26 octobre 2026
+- **Trail des Citadelles** : les deux cartes deviennent « Relais 73 km à 4, tronçon 27 km » (0 to 100) et « tronçon 15 km » (0 to 40). Le relais du 73 km se court uniquement à 4, avec des sections de 15 à 27 km (blog officiel). Il n'y a pas de relais sur 40 km en 2027. Alice et Milène (« Mims ») font équipe avec 2 autres coureurs. Ouverture le mer. 11/11 à 15h, 88 € par équipe. Ids inchangés.
+
 ## 1.9.0 — 26 octobre 2026
 - **« 🎟️ J'ai mon dossard »** (demande des participants) : bouton sous « J'y vais ✓ » sur sa course, pour chaque bloc et aussi pour une « autre course ». Toute la team voit 🎟️ à côté du prénom, dans le résumé perso et dans le compteur du bloc (« 🎟️ N dossards »). La case retombe si on change de course.
 - Backend : 7e colonne `dossard` dans l'onglet `choix`, route `POST {type:"dossard"}`, `features:["dossard"]` dans le GET. **Le bouton n'apparaît qu'avec le nouveau script** (un ancien script prendrait l'envoi pour un retrait de course).
