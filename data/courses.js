@@ -113,7 +113,7 @@ window.COURSES = [
   { id: "volta-fondeguilla",         bloc: "juin", weekend: "2027-05-29", date: "2027-05-29", name: "Volta al Terme de Fondeguilla", dept: "Espagne", km: 34.5, dplus: 2200, tracks: ["100"],
     url: "https://www.voltaalterme.eu/", signup: { expect: "≈ fin févr.", note: "44e édition sam. 29/05/2027 (site officiel), 400 places — 2026 : ouvertes du 28/02 au 24/05, 35 € → attendre fin février 2027" } },
   { id: "trail-cote-roannaise",      bloc: "juin", weekend: "2027-05-29", name: "Trail de la Côte Roannaise – 42 km « La CRRASSEUSE »", dept: "42", km: 42, dplus: 2000, tracks: ["100"],
-    url: "https://chronospheres.fr/evenements/detail/TRAIL-DE-LA-COTE-ROANNAISE-2026-1386", signup: { expect: "≈ 20 févr.", note: "⚠️ 42 km limité à 80 dossards — ouverture ≈ 20 février" } },
+    url: "https://chronospheres.fr/evenements/detail/TRAIL-DE-LA-COTE-ROANNAISE-2026-1386", signup: { expect: "≈ 20 févr.", note: "⚠️ date 2027 pas encore arrêtée : certains sites annoncent le dim. 23/05, l'organisateur dit que cette date « se profile » sans être fixée (info d'une participante, 27/10) — le 23/05 tomberait hors du week-end du bloc ; 42 km limité à 80 dossards, ouverture ≈ 20 février" } },
   /* Déplacée du WE 29–30 mai → 5–6 juin le 07/10/2026 : le site officiel annonce le 6 juin 2027 */
   { id: "trail-des-marcaires",       bloc: "juin", weekend: "2027-06-05", date: "2027-06-06", name: "Trail des Marcaires – 32 km « Le Défi de Muhlbach »",       dept: "68", km: 32, dplus: 1630, tracks: ["100"],
     url: "https://www.sporkrono.fr/courses/821171475/trail-des-marcaires/", signup: { expect: "≈ déc./janv.", note: "dim. 6/06/2027 (site officiel) — sporkrono : « Inscription à venir » au 26/10 (la plateforme annonce 34 km, le site 32 km)" } },

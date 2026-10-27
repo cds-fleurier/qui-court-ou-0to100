@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.9.5 — 27 octobre 2026
+- **Trail de la Côte Roannaise** : alerte dans la note. La date 2027 n'est pas arrêtée, le dim. 23/05 « se profile » selon l'organisateur (contacté par une participante), alors que la carte est au week-end du 29–30/05 du bloc. Carte et choix inchangés en attendant la date officielle.
+
 ## 1.9.4 — 26 octobre 2026
 - Mobile : dans le résumé perso, le 🎟️ disparaissait avec la fin d'un nom de course trop long (coupé en « … »). Il est maintenant à part, toujours visible à droite de la pastille.
 
