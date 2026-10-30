@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.9.6 — 30 octobre 2026
+- **Montée de Chambles : inscriptions ouvertes** (lu sur logicourse le 30/10). Dim. 27/12/2026, départ 10h, 11 km et 310 m D+ (300 avant), 16 € ou 15 € licencié FFA, 1 500 dossards, clôture le lun. 21/12 à minuit. Le lien de la carte mène directement à la page d'inscription.
+- **Trail du Sanglier** : la date du sam. 27/03/2027 est confirmée par les organisateurs (info de l'utilisateur). Inscriptions attendues bientôt, la pastille reste « Ouverture ≈ nov. ».
+
 ## 1.9.5 — 27 octobre 2026
 - **Trail de la Côte Roannaise** : alerte dans la note. La date 2027 n'est pas arrêtée, le dim. 23/05 « se profile » selon l'organisateur (contacté par une participante), alors que la carte est au week-end du 29–30/05 du bloc. Carte et choix inchangés en attendant la date officielle.
 
