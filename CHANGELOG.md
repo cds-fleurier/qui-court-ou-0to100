@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.10.0 — 15 novembre 2026
+Veille inscriptions sur les 43 courses sans statut (détail : `docs/inscriptions_veille_2026-11-15.md`). Ouvertures relues sur les plateformes d'inscription.
+- **Ouvertes** : Nocturne du Cœur (chrono-start, 462 places, clôture 18/12 12h) ; Trail des Citadelles relais 73 km à 4 (chrono-start, 52 équipes restantes, clôture 14/03 ; les 10, 26, 40 et 58 km sont déjà complets) ; Grand Raid Guillestrois-Queyras, Trail des Lacs (registration4all, **109 places restantes**, sans liste d'attente).
+- **Grand Trail du Garlaban** : dim. 21/03/2027 (site officiel) → carte déplacée au week-end du 20–21/03.
+- **Course des Cascades** : ouverture le 15/12/2026 (compte à rebours sur le site de l'orga).
+- **Trail de la Côte Roannaise** : date officielle dim. 23/05/2027, une semaine avant le week-end du bloc (note).
+- **Franchevill'Trail** : sam. 5/06/2027, ouverture mi-décembre ; distances 2027 annoncées 31, 22, 12 et 5 km (le 25 km n'y est plus, note ⚠️). Lien vers le site officiel.
+- **Trail des Marcaires** 34 km / 1650 D+ et **Intégrale du Bostet** 36 km / 2200 D+ (sam. 5/06) : distances 2027 des sites officiels.
+- Trail de l'Éolienne « début 2027 » ; notes mises à jour (Run Écully, Rocamadour, SKTRAIL, Grottes, Piqueurs, Sanglier, Cagire).
+
 ## 1.9.6 — 30 octobre 2026
 - **Montée de Chambles : inscriptions ouvertes** (lu sur logicourse le 30/10). Dim. 27/12/2026, départ 10h, 11 km et 310 m D+ (300 avant), 16 € ou 15 € licencié FFA, 1 500 dossards, clôture le lun. 21/12 à minuit. Le lien de la carte mène directement à la page d'inscription.
 - **Trail du Sanglier** : la date du sam. 27/03/2027 est confirmée par les organisateurs (info de l'utilisateur). Inscriptions attendues bientôt, la pastille reste « Ouverture ≈ nov. ».
