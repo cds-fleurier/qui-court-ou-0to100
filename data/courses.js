@@ -51,6 +51,8 @@ window.COURSES = [
   { id: "trail-de-la-guigne",        bloc: "noel", weekend: "2026-12-26", date: "2026-12-27", name: "Trail de la Guigne",        dept: "14", km: 14, dplus: 160, tracks: ["100"],
     url: "https://chronometrage.com/prices/traildelaguigne-1", signup: { status: "open", note: "ouvertes (chronometrage.com) — dim. 27/12/2026, 14 km à 9h30 : 13 € ; ≈ 610 places libres sur 750 mi-oct. (28/29 km : 25 € jusqu'au 20/11)" } },
 
+  { id: "corrida-tarascon",          bloc: "noel", weekend: "2026-12-19", name: "Corrida de Tarascon – 11,4 km « Le Combiné »", dept: "09", km: 11.4, dplus: 620, tracks: ["100"],
+    url: "https://chrono-start.com/Inscription/Course/detail/c/5591", signup: { status: "open", close: "2026-12-18", note: "validée par le staff pour Alice (17/11) — sam. 19/12/2026 à Tarascon-sur-Ariège : « 500 qui pique » (1,9 km / 520 D+, départ 15h) puis Corrida (9,5 km / 100 D+, 3 boucles, départ 17h30) ; combiné 15 € (10 € l'une seule) sur chrono-start, clôture ven. 18/12 à 18h" } },
   /* ─── Mars · 20–30 km ─────────────────────────────────────────────────── */
   { id: "trail-retournacois",        bloc: "mars", weekend: "2027-03-20", name: "Trail Retournacois – 24 km « VO2 Suc »",        dept: "43", km: 24, dplus: 1100, tracks: ["100"],
     url: "https://www.chronopuces.fr/trail-retournacois-2026", signup: { expect: "≈ mi-déc.", note: "2027 pas encore publié sur chronopuces au 26/10 — 2026 : dim. 22/03, ouvertes du 19/12/2025 au 21/03 (10 km 10–12 €, 15 km 13–15 €, 24 km 20–24 €)" } },
@@ -142,6 +144,8 @@ window.COURSES = [
   { id: "franchevill-trail-25",      bloc: "juin", weekend: "2027-06-05", name: "Franchevill'Trail – 25 km « Trail du Fort »", dept: "69", km: 25, dplus: 530, tracks: ["40"],
     url: "https://franchevilltrail.fr/", signup: { expect: "≈ mi-déc.", note: "Francheville (métropole de Lyon) — sam. 5/06/2027 (site officiel), ouverture des inscriptions annoncée mi-décembre 2026 ; ⚠️ distances 2027 prévues : 31, 22, 12 et 5 km (plus de 25 km ?) ; 2026 : départ 17h" } },
 
+  { id: "trail-du-tarbesou-30",      bloc: "juin", weekend: "2027-06-05", name: "Trail du Tarbesou – 30 km « Le Défi du Tarbesou »", dept: "09", km: 30, dplus: 2100, tracks: ["100"],
+    url: "https://www.traildutarbesou.fr/parcours-et-details", signup: { expect: "début 2027", note: "validé par le staff pour Alice (17/11) — sam. 5/06/2027 (site officiel), arrivée au col de Pailhères ; « plus de 2 100 m D+ », réservé aux coureurs expérimentés ; inscriptions annoncées début 2027" } },
   /* ─── Début juillet · 40–50 km ────────────────────────────────────────── */
   { id: "chalmatrail",               bloc: "juillet", weekend: "2027-07-03", name: "Chalmatrail – 45 km « Chalma'Rathon »",            dept: "42", km: 45, dplus: 1840, tracks: ["100"],
     url: "https://escoutoux.net/Chalmatrail", signup: { expect: "≈ 20 déc.", note: "2026 : ouvertes le 20 déc. 2025 → attendre ~20 déc. 2026 (logicourse), départ 7h" } },
@@ -161,5 +165,7 @@ window.COURSES = [
     url: "https://inscriptions.as2pic.org/tour-des-glaciers-de-la-vanoise", signup: { status: "open", note: "ouvertes depuis le 25/10/2026 18h (as2pic) — 30 € + frais ; 388 places restantes au 26/10 ; Pralognan, dim. 4/07/2027, départ 7h" } },
   /* Déplacée de « juin » → « juillet » le 22/09/2026 (signalé par Myriam) : l'édition 2026 a eu lieu le dim. 5 juillet */
   { id: "trail-hyeges-verdon",       bloc: "juillet", weekend: "2027-07-03", name: "Trail Hyèges Verdon",       dept: "04", km: 45, dplus: 2300, tracks: ["100"],
-    url: "https://www.thvtrail.fr/", signup: { expect: "≈ févr./mars", note: "2026 : dim. 5/07 — ouverture ≈ fév./mars (sportips)" } }
+    url: "https://www.thvtrail.fr/", signup: { expect: "≈ févr./mars", note: "2026 : dim. 5/07 — ouverture ≈ fév./mars (sportips)" } },
+  { id: "pic-des-trois-seigneurs",   bloc: "juillet", weekend: "2027-07-03", name: "Trail du Pic des Trois Seigneurs – 42 km « Marathon des Trois Seigneurs »", dept: "09", km: 42, dplus: 3150, tracks: ["100"],
+    url: "https://vo2max09.fr/marathon-des-trois-seigneurs/", signup: { expect: "à venir", note: "validé par le staff pour Alice (17/11) — date 2027 pas encore annoncée (« début juillet » selon Finishers) ; 2026 : sam. 4/07 à 5h30 au départ de Tarascon-sur-Ariège (parking du Parc de la Préhistoire), 42 km / 3 150 D+, 40 € puis 43 € ; « inscription à venir » sur le site de l'orga (VO2max Tarascon)" } },
 ];

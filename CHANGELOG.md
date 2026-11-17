@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.10.1 — 17 novembre 2026
+Trois courses ariégeoises validées par le staff (Camille et Guillaume) pour Alice, demande transmise par WhatsApp :
+- **Noël : Corrida de Tarascon – 11,4 km « Le Combiné »** (`corrida-tarascon`) : sam. 19/12/2026, « 500 qui pique » (1,9 km / 520 D+, 15h) + Corrida (9,5 km, 17h30), 620 D+ au total, 15 €. Inscriptions **ouvertes** sur chrono-start (c/5591), clôture le 18/12 à 18h.
+- **Juin : Trail du Tarbesou – 30 km « Le Défi du Tarbesou »** (`trail-du-tarbesou-30`) : sam. 5/06/2027, plus de 2 100 m D+, inscriptions début 2027.
+- **Juillet : Trail du Pic des Trois Seigneurs – 42 km « Marathon des Trois Seigneurs »** (`pic-des-trois-seigneurs`) : 3 150 m D+, date 2027 pas encore annoncée (2026 : sam. 4/07), au week-end du 3–4/07.
+
 ## 1.10.0 — 15 novembre 2026
 Veille inscriptions sur les 43 courses sans statut (détail : `docs/inscriptions_veille_2026-11-15.md`). Ouvertures relues sur les plateformes d'inscription.
 - **Ouvertes** : Nocturne du Cœur (chrono-start, 462 places, clôture 18/12 12h) ; Trail des Citadelles relais 73 km à 4 (chrono-start, 52 équipes restantes, clôture 14/03 ; les 10, 26, 40 et 58 km sont déjà complets) ; Grand Raid Guillestrois-Queyras, Trail des Lacs (registration4all, **109 places restantes**, sans liste d'attente).
