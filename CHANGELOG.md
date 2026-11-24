@@ -1,5 +1,26 @@
 # Changelog
 
+## 1.11.0 — 24 novembre 2026
+Corrections issues de la revue du 24/11 (sécurité, fiabilité, accessibilité) et chargement plus rapide.
+
+**Site**
+- **« Annuler » après un retrait ou un changement de course** : un tap sur « J'y vais ✓ » (ou « Je ne sais plus ») retirait le choix et le dossard sans retour possible. Un toast « Choix retiré · Annuler » (ou « Course changée · Annuler ») reste 6 s ; « Annuler » renvoie l'ancien choix puis le dossard. (La validation staff d'une « autre course » ne revient pas : le staff doit la recocher.)
+- **Plus jamais de boutons bloqués** : toute requête est abandonnée après 15 s (AbortController) ; une écriture qui échoue disparaît d'elle-même et l'affichage revient à l'état du Sheet.
+- **Réponses dans le désordre** : une réponse plus ancienne que l'état affiché ne l'écrase plus (seule la ligne qu'elle a écrite est reprise) ; les écritures en cours restent affichées par-dessus les données reçues.
+- **Affichage immédiat** : les derniers choix connus s'affichent avant le réseau (plus récente des clés `qco_choices_cache` / `team_choices_cache`, cette dernière partagée avec le calendrier et le hub) ; l'app écrit les deux après chaque chargement. Mesure (faux backend à 2,5 s, 375 px) : noms affichés en ≈ 35 ms au lieu de ≈ 2,55 s dès la 2ᵉ visite (ou après un passage sur le calendrier).
+- **Requête lancée plus tôt** : `config.js` passe en tête du `<head>` et lance le GET tout de suite (`window.__qcoChoices`), repris par `app.js` ; `preconnect` vers `script.google.com` et `script.googleusercontent.com`.
+- **Mise en page** : une note ou un nom très long sans espace ne fait plus déborder la page (`overflow-wrap:anywhere`, `min-width:0` sur les enfants de grille ; vérifié à 375 px avec 60 caractères).
+- **Roster absent** (site de la carte injoignable) : bandeau neutre « La liste des participants n'a pas pu être chargée… ».
+- **Accessibilité** : `--text-muted` #44505f → #7a8798 (contraste ≥ 4,5:1) ; plus d'`aria-live` sur toute la page (seuls les toasts de confirmation sont annoncés) ; filtres en boutons `aria-pressed` (plus de faux `tablist`) ; cibles tactiles ≥ 44 px (boutons, filtres, « Infos », « Pas encore choisi », champs) ; focus visible au clavier ; le focus reste sur la même carte après un « J'y vais » ; champs en 16 px (plus de zoom iOS au focus).
+- Petits restes : photo introuvable → initiales via `data-initials` (plus de chaîne échappée dans un `onerror`) ; prénom d'invité nettoyé (ni `|` ni = + - @ en tête) ; longueurs alignées sur le script (note 80) ; CSS mort `.runner-names--none` retiré.
+
+**Script du Sheet (`backend/Code.gs`, à redéployer — voir `backend/README.md`)**
+- Protection contre l'injection de formules : toute valeur texte écrite commençant par = + - @ est préfixée d'une apostrophe (helper unique `safe()` : choix, notes, journal, calendrier).
+- Validation stricte : id participant (roster ou invité), bloc, id de course, note ≤ 80 ; calendrier : track, scenario week1/week2, vraies dates du 01/03/2026 au 30/09/2027, ≤ 800 clés par appel, ≤ 620 jours stockés par ligne → sinon `{ ok:false, error }`, rien n'est écrit.
+- Journal : colonnes `ancienne_course` / `ancienne_note` lors d'un changement ou d'un retrait ; patchs du calendrier journalisés (`calendrier`, `track/scenario`, `+N / −M`), cumulés dans une seule ligne par série de clics (30 min).
+- `doGet` et `doPost` toujours en JSON (try/catch) ; verrou sur toutes les écritures (message « serveur occupé » au lieu d'une erreur Google).
+- Cache du GET principal (30 s), réécrit sous verrou à chaque écriture ; une modification manuelle du Sheet apparaît en ≤ 30 s.
+
 ## 1.10.1 — 17 novembre 2026
 Trois courses ariégeoises validées par le staff (Camille et Guillaume) pour Alice, demande transmise par WhatsApp :
 - **Noël : Corrida de Tarascon – 11,4 km « Le Combiné »** (`corrida-tarascon`) : sam. 19/12/2026, « 500 qui pique » (1,9 km / 520 D+, 15h) + Corrida (9,5 km, 17h30), 620 D+ au total, 15 €. Inscriptions **ouvertes** sur chrono-start (c/5591), clôture le 18/12 à 18h.

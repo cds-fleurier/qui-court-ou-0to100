@@ -3,6 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Choix d'inscriptions : le script Apps Script répond par une redirection vers googleusercontent -->
+  <link rel="preconnect" href="https://script.google.com" crossorigin />
+  <link rel="preconnect" href="https://script.googleusercontent.com" crossorigin />
+  <!-- config.js en tête : il lance tout de suite le chargement des choix (window.__qcoChoices) -->
+  <script src="scripts/config.js?v=1.11.0"></script>
   <title>0 to 40 &amp; 100 — Qui court où ?</title>
   <meta name="description" content="Les courses de préparation de la team 0 to 100 & 0 to 40 : qui va courir où, pour ne pas courir seul." />
   <meta name="robots" content="noindex, nofollow" />
@@ -11,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles/main.css?v=1.10.1" />
+  <link rel="stylesheet" href="styles/main.css?v=1.11.0" />
 </head>
 <body>
   <div class="app-shell">
@@ -50,16 +55,16 @@
 
     <!-- Filtres -->
     <div class="toolbar">
-      <div class="segmented" role="tablist" aria-label="Filtrer par projet">
-        <button class="seg is-active" data-filter="all">Tous</button>
-        <button class="seg" data-filter="100"><i class="dot dot--100"></i>0 to 100</button>
-        <button class="seg" data-filter="40"><i class="dot dot--40"></i>0 to 40</button>
+      <div class="segmented" role="group" aria-label="Filtrer par projet">
+        <button type="button" class="seg is-active" data-filter="all" aria-pressed="true">Tous</button>
+        <button type="button" class="seg" data-filter="100" aria-pressed="false"><i class="dot dot--100" aria-hidden="true"></i>0 to 100</button>
+        <button type="button" class="seg" data-filter="40" aria-pressed="false"><i class="dot dot--40" aria-hidden="true"></i>0 to 40</button>
       </div>
       <p class="count" id="count"></p>
     </div>
 
     <!-- Les 4 blocs -->
-    <main id="blocs" class="blocs" aria-live="polite"></main>
+    <main id="blocs" class="blocs"></main>
 
     <footer class="foot">
       <p>Liste des courses validée par le staff · contraintes de distance par parcours.<br />
@@ -75,11 +80,10 @@
   <!-- Toast -->
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 
-  <script src="scripts/config.js?v=1.10.1"></script>
   <!-- Roster = celui de la carte (source de vérité unique, pas de copie à synchroniser) -->
   <script src="https://cds-fleurier.github.io/carte-participants-0to100/data/participants.js"></script>
-  <script src="data/courses.js?v=1.10.1"></script>
-  <script src="scripts/app.js?v=1.10.1"></script>
+  <script src="data/courses.js?v=1.11.0"></script>
+  <script src="scripts/app.js?v=1.11.0"></script>
   <!-- Barre d'onglets partagée de la team (hub) -->
   <script src="https://cds-fleurier.github.io/0to100-hub/nav.js" defer></script>
 </body>

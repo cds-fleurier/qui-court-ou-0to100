@@ -4,14 +4,20 @@
    (API_URL dans config.js). Sans API_URL → mode démo (localStorage).
    ──────────────────────────────────────────────────────────────────────────── */
 
-const APP_VERSION = "1.10.1";
+const APP_VERSION = "1.11.0";
 /* Identité partagée avec le calendrier et la carte (même origine → même localStorage) */
 const LS_ME      = "team_me";
 const LS_ME_OLD  = "qco_me";
 const LS_GUEST_PENDING = "qco_guest_pending"; // id invité dont les choix restent à reprendre
 const LS_FILTER  = "qco_filter";
 const LS_DEMO    = "qco_demo_choices";
-const LS_CACHE   = "qco_choices_cache";   // derniers choix connus, pour l'affichage hors ligne
+const LS_CACHE   = "qco_choices_cache";   // derniers choix connus : affichage immédiat + hors ligne
+/* Même réponse, même origine : le calendrier (et le hub) la rangent sous cette clé, format { at, choices }.
+   On lit la plus récente des deux au démarrage et on écrit les deux après chaque chargement. */
+const LS_TEAM_CACHE = "team_choices_cache";
+const API_TIMEOUT_MS = 15000;              // au-delà, la requête est abandonnée (boutons jamais bloqués)
+const UNDO_MS = 6000;                      // durée du toast « Annuler »
+const NOTE_MAX = 80;                       // « autre course » : même limite que le script (MAX_NOTE)
 
 const $  = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
@@ -20,15 +26,18 @@ const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 const state = {
   me: null,            // id participant
   filter: "all",       // "all" | "100" | "40"
-  choices: [],         // [{ participant, bloc, course, note, updated_at, validated, dossard }]
+  choices: [],         // ce qu'on affiche = server + écritures en cours (pending)
+  server: [],          // dernier état connu du Sheet [{ participant, bloc, course, note, updated_at, validated, dossard }]
+  pending: new Map(),  // "participant\nbloc" → { entry|null, seq } : écritures parties, pas encore confirmées
+  seq: 0,              // numéro de chaque requête, dans l'ordre d'envoi
+  appliedSeq: 0,       // numéro de la réponse qui a produit `server` (une plus ancienne ne l'écrase pas)
+  lastWriteSeq: 0,     // numéro du dernier POST (un GET parti avant lui est périmé)
   dossardOk: false,    // le script du Sheet gère « dossard acheté » (features du GET) — sinon pas de bouton
   loading: false,
-  saving: null,        // bloc en cours d'enregistrement
   otherOpen: {},       // bloc → true quand le champ « autre course » est ouvert
   guestOpen: false,    // formulaire « je ne suis pas dans la liste » ouvert
   lastSync: null,
   offline: false,      // vrai si le dernier chargement a échoué (on affiche le cache)
-  savedAt: 0,          // horodatage du dernier enregistrement (pour ignorer un chargement périmé)
   infoOpen: new Set()  // cartes dont l'accordéon « infos » est ouvert (survit aux rafraîchissements)
 };
 
@@ -39,7 +48,10 @@ const byId = Object.fromEntries(PARTICIPANTS.map(p => [p.id, p]));
 /* Invités (pas dans le trombinoscope) : id "guest|<100|40>|<Prénom>", même convention que
    le calendrier. On les reconstitue à la volée depuis l'id, sans photo. */
 const GUEST_PREFIX = "guest|";
-function guestId(group, name) { return GUEST_PREFIX + group + "|" + name.trim(); }
+/* Prénom d'invité : pas de « | » (séparateur) ni de = + - @ en tête (refusés par le script). */
+const GUEST_NAME_MAX = 30;
+function cleanGuestName(name) { return String(name || "").replace(/\|/g, " ").trim().replace(/^[=+\-@\s]+/, "").slice(0, GUEST_NAME_MAX).trim(); }
+function guestId(group, name) { return GUEST_PREFIX + group + "|" + cleanGuestName(name); }
 function guestFromId(id) {
   if (typeof id !== "string" || !id.startsWith(GUEST_PREFIX)) return null;
   const [, group, name] = id.split("|");
@@ -77,9 +89,11 @@ function photoUrl(p) {
 function avatar(p, size = "") {
   const cls = `ava ava--${p.group}${size ? " ava--" + size : ""}`;
   const url = photoUrl(p);
+  const ini = esc(initials(p.name));
+  // Photo introuvable → initiales (data-initials), via l'écouteur « error » global de bind()
   return url
-    ? `<span class="${cls}" title="${esc(p.name)}"><img src="${esc(url)}" alt="${esc(p.name)}" loading="lazy" onerror="this.replaceWith(document.createTextNode('${esc(initials(p.name))}'))" /></span>`
-    : `<span class="${cls}" title="${esc(p.name)}">${esc(initials(p.name))}</span>`;
+    ? `<span class="${cls}" title="${esc(p.name)}" data-initials="${ini}"><img src="${esc(url)}" alt="${esc(p.name)}" loading="lazy" /></span>`
+    : `<span class="${cls}" title="${esc(p.name)}">${ini}</span>`;
 }
 function fmtKm(v) { return typeof v === "number" ? String(v).replace(".", ",") + " km" : v; }
 function fmtDplus(v) { return typeof v === "number" ? v.toLocaleString("fr-FR") + " m D+" : (v || "D+ à préciser"); }
@@ -122,13 +136,25 @@ function fmtDay(iso) {
 function normalize(s) {
   return String(s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, " ").trim();
 }
-function toast(msg, kind = "") {
+/* Toast = seule zone annoncée aux lecteurs d'écran (role=status). `action` : { label, fn } → bouton
+   (ex. « Annuler »), affiché plus longtemps. */
+function toast(msg, kind = "", action = null) {
   const t = $("#toast");
-  t.textContent = msg;
-  t.className = "toast" + (kind ? " toast--" + kind : "");
+  const text = document.createElement("span");
+  text.textContent = msg;
+  t.replaceChildren(text);
+  if (action) {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "toast-act";
+    b.textContent = action.label;
+    b.addEventListener("click", () => { clearTimeout(toast._t); t.hidden = true; action.fn(); });
+    t.append(b);
+  }
+  t.className = "toast" + (kind ? " toast--" + kind : "") + (action ? " toast--action" : "");
   t.hidden = false;
   clearTimeout(toast._t);
-  toast._t = setTimeout(() => { t.hidden = true; }, 2600);
+  toast._t = setTimeout(() => { t.hidden = true; }, action ? UNDO_MS : 2600);
 }
 function visibleTracks() { return state.filter === "all" ? ["100", "40"] : [state.filter]; }
 function isVisible(p) { return state.filter === "all" || p.group === state.filter; }
@@ -153,113 +179,188 @@ function undecided(blocId) {
 }
 
 /* ─── Backend ──────────────────────────────────────────────────────────────── */
+/* Requête vers le script du Sheet, abandonnée après 15 s. `body` absent → GET.
+   Le tout premier GET est lancé dès le <head> par config.js (window.__qcoChoices) : on le reprend. */
+async function api(body) {
+  if (!body && window.__qcoChoices) {
+    const early = window.__qcoChoices;
+    window.__qcoChoices = null;
+    const data = await early;
+    if (!data || !data.ok) throw new Error((data && data.error) || "réponse invalide");
+    return data;
+  }
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), API_TIMEOUT_MS);
+  try {
+    // POST sans Content-Type → pas de preflight CORS (Apps Script ne gère pas OPTIONS).
+    const opts = body ? { method: "POST", body: JSON.stringify(body), signal: ctrl.signal } : { cache: "no-store", signal: ctrl.signal };
+    const res = await fetch(API_URL, opts);
+    const data = await res.json();
+    if (!data || !data.ok) throw new Error((data && data.error) || "réponse invalide");
+    return data;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+const pendingKey = (participant, blocId) => participant + "\n" + blocId;
+function isSaving(blocId) { return Boolean(state.me) && state.pending.has(pendingKey(state.me, blocId)); }
+
+/* Ce qu'on affiche = l'état du Sheet, recouvert par les écritures pas encore confirmées. */
+function recompute() {
+  const overlay = [...state.pending.values()];
+  state.choices = overlay.length
+    ? state.server.filter(c => !state.pending.has(pendingKey(c.participant, c.bloc))).concat(overlay.map(p => p.entry).filter(Boolean))
+    : state.server;
+}
+
+/* Réponse du Sheet. Plus récente que l'état affiché → elle le remplace ; plus ancienne (réponses
+   arrivées dans le désordre) → on n'en garde que la ligne qu'elle vient d'écrire. */
+function applyServer(choices, seq, own = null) {
+  if (seq >= state.appliedSeq) {
+    state.server = choices;
+    state.appliedSeq = seq;
+  } else if (own) {
+    const fresh = choices.find(c => c.participant === own.participant && c.bloc === own.bloc);
+    state.server = state.server.filter(c => !(c.participant === own.participant && c.bloc === own.bloc)).concat(fresh ? [fresh] : []);
+  }
+}
+
+function readCache() {
+  const read = key => { try { const v = JSON.parse(localStorage.getItem(key) || "null"); return v && Array.isArray(v.choices) ? v : null; } catch { return null; } };
+  const own = read(LS_CACHE), team = read(LS_TEAM_CACHE);
+  if (own && team) return (team.at || 0) > (own.at || 0) ? { ...team, dossardOk: own.dossardOk } : own;
+  return own || team;
+}
+function writeCache(data) {
+  const at = Date.now();
+  try { localStorage.setItem(LS_CACHE, JSON.stringify({ at, choices: state.server, dossardOk: state.dossardOk })); } catch { /* plein */ }
+  try { localStorage.setItem(LS_TEAM_CACHE, JSON.stringify({ at, choices: data.choices })); } catch { /* plein */ }
+}
+
+/* Affichage immédiat des derniers choix connus (cette app, le calendrier ou le hub), avant le réseau. */
+function showCache() {
+  const cached = readCache();
+  if (!cached) return;
+  state.server = cached.choices;
+  if (typeof cached.dossardOk === "boolean") state.dossardOk = cached.dossardOk;
+  else state.dossardOk = cached.choices.some(c => "dossard" in c);
+  state.lastSync = cached.at ? new Date(cached.at) : null;
+  recompute();
+}
+
 async function loadChoices({ silent = false } = {}) {
   if (DEMO) {
-    try { state.choices = JSON.parse(localStorage.getItem(LS_DEMO) || "[]"); } catch { state.choices = []; }
+    try { state.server = JSON.parse(localStorage.getItem(LS_DEMO) || "[]"); } catch { state.server = []; }
+    recompute();
     state.lastSync = new Date();
     return;
   }
   state.loading = !silent;
   if (!silent) render();
-  const startedAt = Date.now();
+  const seq = ++state.seq;
   try {
-    const res = await fetch(API_URL, { cache: "no-store" });
-    const data = await res.json();
-    if (!data.ok) throw new Error(data.error || "réponse invalide");
-    // Un « J'y vais » est parti pendant ce chargement : sa réponse fait foi, pas celle-ci
-    if (state.savedAt > startedAt) return;
-    state.choices = data.choices || [];
+    const data = await api();
+    // Un « J'y vais » est parti pendant ce chargement (ou est en cours) : sa réponse fait foi
+    if (state.lastWriteSeq > seq || state.pending.size) return;
+    applyServer(Array.isArray(data.choices) ? data.choices : [], seq);
+    recompute();
     state.dossardOk = Array.isArray(data.features) && data.features.includes("dossard");
     state.lastSync = new Date();
     state.offline = false;
-    try { localStorage.setItem(LS_CACHE, JSON.stringify({ at: Date.now(), choices: state.choices, dossardOk: state.dossardOk })); } catch { /* plein */ }
+    writeCache(data);
   } catch (err) {
     console.error(err);
-    state.offline = true;
-    try {
-      const cached = JSON.parse(localStorage.getItem(LS_CACHE) || "null");
-      if (cached && Array.isArray(cached.choices)) { state.choices = cached.choices; state.dossardOk = Boolean(cached.dossardOk); state.lastSync = new Date(cached.at); }
-    } catch { /* pas de cache */ }
+    state.offline = true; // on garde ce qui est affiché (données fraîches précédentes ou cache)
     if (!silent) toast("Connexion impossible — affichage des derniers choix connus.", "err");
   } finally {
     state.loading = false;
   }
 }
 
-async function saveChoice(blocId, courseId, note = "") {
-  if (!state.me) return;
-  const payload = { participant: state.me, bloc: blocId, course: courseId || "", note: note || "" };
-
-  // Optimiste : on applique tout de suite, on confirmera avec la réponse serveur.
-  const before = state.choices;
-  state.choices = before.filter(c => !(c.participant === state.me && c.bloc === blocId));
-  if (courseId) state.choices.push({ ...payload, updated_at: new Date().toISOString(), validated: "" });
-  state.saving = blocId;
-  state.savedAt = Date.now();
-  state.otherOpen[blocId] = false;
+/* Écriture optimiste : `entry` (ou null = retrait) s'affiche tout de suite, puis la réponse du Sheet
+   fait foi. Échec ou délai dépassé → l'écriture en attente disparaît, l'affichage revient seul. */
+async function write(participant, blocId, entry, body) {
+  const seq = ++state.seq;
+  const key = pendingKey(participant, blocId);
+  state.lastWriteSeq = seq;
+  state.pending.set(key, { entry, seq });
+  recompute();
   render();
-
   if (DEMO) {
-    localStorage.setItem(LS_DEMO, JSON.stringify(state.choices));
-    state.saving = null;
+    state.pending.delete(key);
+    state.server = state.choices;
+    recompute();
+    try { localStorage.setItem(LS_DEMO, JSON.stringify(state.server)); } catch { /* plein */ }
     render();
-    toast(courseId ? "C'est noté (mode démo, sur ce téléphone seulement)." : "Choix retiré.");
-    return;
+    return true;
   }
-
+  let ok = false;
   try {
-    // Pas d'en-tête Content-Type → pas de preflight CORS (Apps Script ne gère pas OPTIONS).
-    const res = await fetch(API_URL, { method: "POST", body: JSON.stringify(payload) });
-    const data = await res.json();
-    if (!data.ok) throw new Error(data.error || "échec enregistrement");
-    if (Array.isArray(data.choices)) state.choices = data.choices;
-    toast(courseId ? "C'est noté, tout le monde le voit." : "Choix retiré.");
+    const data = await api(body);
+    if (Array.isArray(data.choices)) applyServer(data.choices, seq, { participant, bloc: blocId });
+    else applyServer(state.server.filter(c => !(c.participant === participant && c.bloc === blocId)).concat(entry ? [entry] : []), seq);
+    ok = true;
   } catch (err) {
     console.error(err);
-    state.choices = before;
-    toast("Enregistrement impossible — réessaie.", "err");
   } finally {
-    state.saving = null;
+    if (state.pending.get(key)?.seq === seq) state.pending.delete(key);
+    recompute();
     render();
   }
+  return ok;
+}
+
+function snapshotOf(choice) {
+  return choice ? { course: choice.course, note: choice.note || "", dossard: hasDossard(choice) } : null;
+}
+
+/* `undo` : retirer ou changer un choix propose « Annuler » pendant 6 s (ancien choix + dossard). */
+async function saveChoice(blocId, courseId, note = "", { undo = true, dossard = false } = {}) {
+  if (!state.me) return false;
+  const me = state.me;
+  const prev = snapshotOf(choiceOf(me, blocId));
+  state.otherOpen[blocId] = false;
+  const entry = courseId
+    ? { participant: me, bloc: blocId, course: courseId, note: note || "", updated_at: new Date().toISOString(), validated: "", dossard: dossard ? "1" : "" }
+    : null;
+  const ok = await write(me, blocId, entry, { participant: me, bloc: blocId, course: courseId || "", note: note || "" });
+  if (!ok) { toast("Enregistrement impossible — réessaie.", "err"); return false; }
+  if (!undo) return true;
+  const changed = prev && (!courseId || prev.course !== courseId || prev.note !== (note || ""));
+  if (changed) {
+    toast(courseId ? "Course changée" : "Choix retiré", "", { label: "Annuler", fn: () => restoreChoice(me, blocId, prev) });
+  } else {
+    toast(DEMO ? "C'est noté (mode démo, sur ce téléphone seulement)." : "C'est noté, tout le monde le voit.");
+  }
+  return true;
+}
+
+/* « Annuler » : on renvoie l'ancien choix, puis le dossard (le script le remet à zéro à chaque changement). */
+async function restoreChoice(me, blocId, prev) {
+  if (state.me !== me) return;
+  const ok = await saveChoice(blocId, prev.course, prev.note, { undo: false, dossard: prev.dossard });
+  if (!ok) return;
+  if (prev.dossard && (DEMO || state.dossardOk)) await saveDossard(blocId, true, { quiet: true });
+  toast("Choix rétabli.");
 }
 
 /* « J'ai mon dossard » : se coche sur SON choix du bloc, visible par toute la team.
    Retombe tout seul si on change de course (côté script). */
-async function saveDossard(blocId, value) {
-  const mine = state.me && choiceOf(state.me, blocId);
-  if (!mine || (!DEMO && !state.dossardOk)) return;
-  const before = state.choices;
-  state.choices = before.map(c => (c === mine ? { ...c, dossard: value ? "1" : "" } : c));
-  state.saving = blocId;
-  state.savedAt = Date.now();
-  render();
-  if (DEMO) {
-    localStorage.setItem(LS_DEMO, JSON.stringify(state.choices));
-    state.saving = null;
-    render();
-    return;
-  }
-  try {
-    const res = await fetch(API_URL, { method: "POST", body: JSON.stringify({ type: "dossard", participant: state.me, bloc: blocId, value }) });
-    const data = await res.json();
-    if (!data.ok) throw new Error(data.error || "échec enregistrement");
-    if (Array.isArray(data.choices)) state.choices = data.choices;
-    toast(value ? "🎟️ Dossard noté, bravo !" : "Dossard retiré.");
-  } catch (err) {
-    console.error(err);
-    state.choices = before;
-    toast("Enregistrement impossible — réessaie.", "err");
-  } finally {
-    state.saving = null;
-    render();
-  }
+async function saveDossard(blocId, value, { quiet = false } = {}) {
+  const me = state.me;
+  const mine = me && choiceOf(me, blocId);
+  if (!mine || (!DEMO && !state.dossardOk)) return false;
+  const ok = await write(me, blocId, { ...mine, dossard: value ? "1" : "" }, { type: "dossard", participant: me, bloc: blocId, value });
+  if (!ok) toast("Enregistrement impossible — réessaie.", "err");
+  else if (!quiet) toast(value ? "🎟️ Dossard noté, bravo !" : "Dossard retiré.");
+  return ok;
 }
 
 function dossardButton(blocId, choice) {
   if (!choice || (!DEMO && !state.dossardOk)) return "";
   const on = hasDossard(choice);
-  return `<button class="btn btn--dossard ${on ? "btn--dossard-on" : ""}" data-act="dossard" data-bloc="${blocId}" data-value="${on ? "0" : "1"}" ${state.saving === blocId ? "disabled" : ""}>${on ? "🎟️ Dossard ✓" : "🎟️ J'ai mon dossard"}</button>`;
+  return `<button class="btn btn--dossard ${on ? "btn--dossard-on" : ""}" data-act="dossard" data-bloc="${blocId}" data-value="${on ? "0" : "1"}" ${isSaving(blocId) ? "disabled" : ""}>${on ? "🎟️ Dossard ✓" : "🎟️ J'ai mon dossard"}</button>`;
 }
 
 /* ─── Rendu ────────────────────────────────────────────────────────────────── */
@@ -339,9 +440,9 @@ function courseCard(course, blocId, meChoice, homonyms = new Set()) {
   const me = state.me && person(state.me);
   const allowed = me && course.tracks.includes(me.group);
   const action = allowed ? (isMine
-    ? `<button class="btn btn--on" data-act="clear" data-bloc="${blocId}" ${state.saving === blocId ? "disabled" : ""}>J'y vais ✓</button>${dossardButton(blocId, meChoice)}`
-    : `<button class="btn" data-act="pick" data-bloc="${blocId}" data-course="${esc(course.id)}" ${state.saving === blocId ? "disabled" : ""}>J'y vais</button>`) : "";
-  return `<article class="course ${isMine ? "course--mine" : ""} ${runners.length ? "course--busy" : ""}" id="course-${esc(course.id)}">
+    ? `<button class="btn btn--on" data-act="clear" data-bloc="${blocId}" ${isSaving(blocId) ? "disabled" : ""}>J'y vais ✓</button>${dossardButton(blocId, meChoice)}`
+    : `<button class="btn" data-act="pick" data-bloc="${blocId}" data-course="${esc(course.id)}" ${isSaving(blocId) ? "disabled" : ""}>J'y vais</button>`) : "";
+  return `<article class="course ${isMine ? "course--mine" : ""} ${runners.length ? "course--busy" : ""}" id="course-${esc(course.id)}" data-key="course-${esc(course.id)}">
     <div class="course-top">
       <div class="course-head">
         <div class="course-title">${trackDots}<span class="cname">${esc(title)}</span>${course.dept ? `<span class="cdept">${esc(course.dept)}</span>` : ""}</div>
@@ -374,9 +475,9 @@ function otherCards(bloc, meChoice) {
     /* Hors liste : « à valider » tant que le staff n'a pas coché la ligne dans le Sheet */
     const validated = isMine && /^(1|true|oui|x|ok|yes|✓)$/i.test(String(meChoice.validated || "").trim());
     const action = state.me ? (isMine
-      ? `<button class="btn btn--on" data-act="clear" data-bloc="${bloc.id}">J'y vais ✓</button>${dossardButton(bloc.id, meChoice)}`
-      : `<button class="btn" data-act="pick" data-bloc="${bloc.id}" data-course="${OTHER_COURSE}" data-note="${esc(g.note)}">J'y vais</button>`) : "";
-    cards.push(`<article class="course course--other ${isMine ? "course--mine" : ""}">
+      ? `<button class="btn btn--on" data-act="clear" data-bloc="${bloc.id}" ${isSaving(bloc.id) ? "disabled" : ""}>J'y vais ✓</button>${dossardButton(bloc.id, meChoice)}`
+      : `<button class="btn" data-act="pick" data-bloc="${bloc.id}" data-course="${OTHER_COURSE}" data-note="${esc(g.note)}" ${isSaving(bloc.id) ? "disabled" : ""}>J'y vais</button>`) : "";
+    cards.push(`<article class="course course--other ${isMine ? "course--mine" : ""}" data-key="other-${esc(bloc.id)}-${esc(key)}">
       <div class="course-top">
         <div class="course-head">
           <div class="course-title"><span class="cname">${esc(g.note)}</span></div>
@@ -398,7 +499,7 @@ function otherForm(bloc, meChoice) {
   }
   const val = meChoice && meChoice.course === OTHER_COURSE ? meChoice.note : "";
   return `<form class="other-form" data-bloc="${bloc.id}">
-    <input type="text" name="note" maxlength="80" placeholder="Nom de la course (+ département)" value="${esc(val)}" required autocomplete="off" />
+    <input type="text" name="note" maxlength="${NOTE_MAX}" placeholder="Nom de la course (+ département)" value="${esc(val)}" required autocomplete="off" />
     <button class="btn" type="submit">J'y vais</button>
     <button class="btn btn--ghost" type="button" data-act="other-close" data-bloc="${bloc.id}">Annuler</button>
   </form>`;
@@ -428,7 +529,7 @@ function renderBlocs() {
       ? `<p class="empty">Aucune course dans ce bloc.</p>`
       : "";
 
-    const meClear = meChoice ? `<button class="btn btn--ghost btn--sm" data-act="clear" data-bloc="${bloc.id}">Je ne sais plus / retirer mon choix</button>` : "";
+    const meClear = meChoice ? `<button class="btn btn--ghost btn--sm" data-act="clear" data-bloc="${bloc.id}" ${isSaving(bloc.id) ? "disabled" : ""}>Je ne sais plus / retirer mon choix</button>` : "";
 
     return `<section class="card bloc" id="bloc-${bloc.id}">
       <header class="bloc-head">
@@ -455,24 +556,61 @@ function renderCount() {
 
 function renderBanner() {
   const b = $("#banner");
-  if (DEMO) {
-    b.hidden = false;
-    b.textContent = "Mode démo : les choix ne sont enregistrés que sur ce téléphone (backend pas encore branché).";
-  } else {
-    b.hidden = true;
-  }
+  const msgs = [];
+  if (DEMO) msgs.push("Mode démo : les choix ne sont enregistrés que sur ce téléphone (backend pas encore branché).");
+  // Le roster vient du site de la carte : s'il n'a pas chargé, pas de prénoms à choisir
+  if (!PARTICIPANTS.length) msgs.push("La liste des participants n'a pas pu être chargée. Les courses restent visibles ; recharge la page dans un moment pour choisir ton prénom.");
+  b.hidden = !msgs.length;
+  b.classList.toggle("banner--neutral", !DEMO && msgs.length > 0);
+  b.textContent = msgs.join(" ");
 }
 
+/* Le rendu reconstruit les blocs : on remet le focus clavier / VoiceOver sur le même bouton
+   (ou, s'il a changé — « J'y vais » → « J'y vais ✓ » —, sur le bouton de la même carte). */
+function focusKey() {
+  const el = document.activeElement;
+  if (!el || !el.closest || !el.closest("#blocs") || el.matches("input, textarea")) return null;
+  const card = el.closest("[data-key]");
+  return { act: el.dataset.act, bloc: el.dataset.bloc, card: card && card.dataset.key, summary: el.matches("summary") };
+}
+function restoreFocus(k) {
+  if (!k) return;
+  const root = (k.card && $(`#blocs [data-key="${CSS.escape(k.card)}"]`)) || (k.bloc && $(`#bloc-${CSS.escape(k.bloc)}`));
+  if (!root) return;
+  const target = (k.summary && $("summary", root))
+    || (k.act && $(`[data-act="${k.act}"]${k.bloc ? `[data-bloc="${CSS.escape(k.bloc)}"]` : ""}`, root))
+    || (k.card && $(".course-side [data-act]", root));
+  if (!target) return;
+  if (target.disabled) lostFocus = k; // bouton grisé pendant l'enregistrement : on réessaie au rendu suivant
+  else target.focus({ preventScroll: true });
+}
+let lostFocus = null;
+
 function render() {
+  const k = focusKey() || (document.activeElement === document.body ? lostFocus : null);
+  lostFocus = null;
   renderMeSummary();
   renderBlocs();
   renderCount();
   renderBanner();
-  $$(".seg").forEach(s => s.classList.toggle("is-active", s.dataset.filter === state.filter));
+  $$(".seg").forEach(s => {
+    const on = s.dataset.filter === state.filter;
+    s.classList.toggle("is-active", on);
+    s.setAttribute("aria-pressed", on ? "true" : "false");
+  });
+  restoreFocus(k);
 }
 
 /* ─── Événements ───────────────────────────────────────────────────────────── */
 function bind() {
+  // Photo d'avatar introuvable → initiales (« error » ne remonte pas → capture)
+  document.addEventListener("error", e => {
+    const img = e.target;
+    if (img && img.tagName === "IMG" && img.parentElement && img.parentElement.dataset.initials !== undefined) {
+      img.parentElement.textContent = img.parentElement.dataset.initials;
+    }
+  }, true);
+
   $("#me-select").addEventListener("change", e => {
     if (e.target.value === "__other") {
       state.guestOpen = true;
@@ -493,7 +631,7 @@ function bind() {
   $("#guest-form")?.addEventListener("submit", e => {
     e.preventDefault();
     const f = e.target;
-    const name = f.name.value.trim().replace(/\|/g, " ").slice(0, 30);
+    const name = cleanGuestName(f.name.value);
     const group = f.group.value;
     if (!name || !["100", "40"].includes(group)) return;
     state.me = guestId(group, name);
@@ -548,9 +686,9 @@ function bind() {
     return !!(el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA") && el.closest("#blocs, #guest-form"));
   }
   async function refresh() {
-    if (document.visibilityState !== "visible" || state.saving) return;
+    if (document.visibilityState !== "visible" || state.pending.size) return;
     await loadChoices({ silent: true });
-    if (!state.saving && !typing()) render();
+    if (!state.pending.size && !typing()) render();
   }
   document.addEventListener("visibilitychange", refresh);
   setInterval(refresh, REFRESH_MS);
@@ -563,19 +701,17 @@ async function migrateGuestChoices(oldId) {
   if (DEMO || state.offline) return;
   const old = state.choices.filter(c => c.participant === oldId && c.course);
   if (!old.length) { localStorage.removeItem(LS_GUEST_PENDING); return; }
-  const post = payload => fetch(API_URL, { method: "POST", body: JSON.stringify(payload) }).then(r => r.json());
-  try {
-    for (const c of old) {
-      const taken = state.choices.some(x => x.participant === state.me && x.bloc === c.bloc && x.course);
-      if (!taken) await post({ participant: state.me, bloc: c.bloc, course: c.course, note: c.note || "" });
-      const data = await post({ participant: oldId, bloc: c.bloc, course: "", note: "" });
-      if (data && Array.isArray(data.choices)) state.choices = data.choices;
+  const me = state.me;
+  for (const c of old) {
+    const taken = state.choices.some(x => x.participant === me && x.bloc === c.bloc && x.course);
+    if (!taken) {
+      const entry = { participant: me, bloc: c.bloc, course: c.course, note: c.note || "", updated_at: new Date().toISOString(), validated: "", dossard: "" };
+      if (!await write(me, c.bloc, entry, { participant: me, bloc: c.bloc, course: c.course, note: c.note || "" })) return; // nouvel essai au prochain chargement
     }
-    localStorage.removeItem(LS_GUEST_PENDING);
-    toast("Tes choix d'invité sont maintenant sous ton prénom.");
-  } catch (err) {
-    console.error(err); // nouvel essai au prochain chargement
+    if (!await write(oldId, c.bloc, null, { participant: oldId, bloc: c.bloc, course: "", note: "" })) return;
   }
+  localStorage.removeItem(LS_GUEST_PENDING);
+  toast("Tes choix d'invité sont maintenant sous ton prénom.");
 }
 
 /* ─── Init ─────────────────────────────────────────────────────────────────── */
@@ -590,6 +726,7 @@ async function migrateGuestChoices(oldId) {
   $("#version").textContent = `v${APP_VERSION}`;
   renderMeSelect();
   bind();
+  if (!DEMO) showCache(); // derniers choix connus tout de suite, remplacés dès que le Sheet répond
   render();
   await loadChoices();
   const guestPending = localStorage.getItem(LS_GUEST_PENDING);

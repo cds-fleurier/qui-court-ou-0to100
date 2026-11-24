@@ -9,7 +9,7 @@
 
   --text:          #e8edf5;
   --text-soft:     #8a97a8;
-  --text-muted:    #44505f;
+  --text-muted:    #7a8798;               /* ≥ 4,5:1 sur le fond (ancien #44505f ≈ 2,3:1) */
 
   --accent:        #ff6b00;               /* 0 to 100 / CCC */
   --accent-dim:    rgba(255, 107, 0, 0.38);
@@ -45,6 +45,11 @@ body {
 }
 a { color: inherit; }
 button { font: inherit; }
+/* Focus visible au clavier (et VoiceOver/Switch Control), jamais au simple tap */
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.seg:focus-visible, .btn:focus-visible, .toast-act:focus-visible { outline-offset: 3px; }
+/* Grilles : un enfant ne doit jamais élargir la page (note longue sans espace…) */
+.app-shell > *, .blocs > *, .course > *, .me-summary > *, .cinfo-body > * { min-width: 0; }
 
 .app-shell {
   max-width: 680px;
@@ -86,6 +91,7 @@ button { font: inherit; }
   font-size: 13px;
   line-height: 1.4;
 }
+.banner--neutral { background: var(--surface-lo); border-color: var(--border-hi); color: var(--text-soft); }
 
 /* ─── Cartes ───────────────────────────────────────────────────────────────── */
 .card {
@@ -113,19 +119,22 @@ button { font: inherit; }
   padding: 11px 36px 11px 14px;
   border-radius: var(--radius);
   min-width: 0;
+  min-height: 44px;
+  font-size: 16px;                       /* < 16 px → iOS zoome au focus */
 }
 .me-select:focus { outline: none; border-color: var(--accent-dim); box-shadow: 0 0 0 3px var(--accent-soft); }
 .me-hint { margin-top: 10px; color: var(--text-soft); font-size: 13px; line-height: 1.45; }
 
 .guest-form { margin-top: 10px; }
 .guest-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
-.guest-row input { flex: 1 1 140px; min-width: 0; background: var(--surface-lo); border: 1px solid var(--border-hi); color: var(--text); font: inherit; padding: 9px 12px; border-radius: var(--radius); }
-.guest-row select { flex: 0 1 120px; background: var(--surface-lo); border: 1px solid var(--border-hi); color: var(--text); font: inherit; font-weight: 600; padding: 9px 12px; border-radius: var(--radius); }
+.guest-row input { flex: 1 1 140px; min-width: 0; min-height: 44px; font-size: 16px !important; background: var(--surface-lo); border: 1px solid var(--border-hi); color: var(--text); font: inherit; padding: 9px 12px; border-radius: var(--radius); }
+.guest-row select { flex: 0 1 120px; min-height: 44px; background: var(--surface-lo); border: 1px solid var(--border-hi); color: var(--text); font: inherit; font-weight: 600; padding: 9px 12px; border-radius: var(--radius); }
 .guest-row input:focus, .guest-row select:focus { outline: none; border-color: var(--accent-dim); box-shadow: 0 0 0 3px var(--accent-soft); }
 
 .me-summary { margin-top: 14px; display: grid; gap: 12px; }
 .me-head { display: flex; align-items: center; gap: 12px; }
-.me-name { font-weight: 800; font-size: 16px; }
+.me-head > div:not(.me-progress) { min-width: 0; }
+.me-name { font-weight: 800; font-size: 16px; overflow-wrap: anywhere; }
 .me-track { margin-top: 3px; display: inline-block; }
 .me-progress {
   margin-left: auto; text-align: right;
@@ -167,6 +176,7 @@ button { font: inherit; }
   appearance: none; border: 0; background: transparent;
   color: var(--text-soft); font-weight: 600; font-size: 13px;
   padding: 7px 14px; border-radius: 999px; cursor: pointer;
+  min-height: 44px;
   display: inline-flex; align-items: center; gap: 6px;
   transition: background .15s, color .15s;
 }
@@ -223,9 +233,10 @@ button { font: inherit; }
 .course-head { flex: 1; min-width: 0; }
 .course-side { flex: none; display: flex; flex-direction: column; align-items: stretch; gap: 6px; }
 .course-side .btn { padding: 6px 12px; }
+.course-side { max-width: 55%; }
 .course-title { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-.cname { font-weight: 800; font-size: 15px; line-height: 1.25; }
-.cformat { margin-top: 2px; font-size: 12.5px; color: var(--text-soft); font-style: italic; }
+.cname { font-weight: 800; font-size: 15px; line-height: 1.25; min-width: 0; overflow-wrap: anywhere; }
+.cformat { overflow-wrap: anywhere; margin-top: 2px; font-size: 12.5px; color: var(--text-soft); font-style: italic; }
 .cdept {
   font-size: 11px; font-weight: 600; color: var(--text-soft);
   background: rgba(255,255,255,.06); padding: 2px 6px; border-radius: 6px;
@@ -247,9 +258,10 @@ button { font: inherit; }
 .pill--full   { background: rgba(255, 90, 90, .14); color: #ffb3b3; }
 
 .cinfo summary {
-  list-style: none; cursor: pointer; display: inline-block;
+  list-style: none; cursor: pointer; display: inline-flex; align-items: center;
+  min-height: 44px; min-width: 64px;
   font-size: 12px; font-weight: 600; color: var(--text-muted);
-  padding: 2px 0;
+  margin: -8px 0 -6px;                   /* cible 44 px sans allonger la carte */
 }
 .cinfo summary::-webkit-details-marker { display: none; }
 .cinfo summary::after { content: " ▾"; }
@@ -259,7 +271,7 @@ button { font: inherit; }
   margin: 4px 0 4px; padding: 8px 10px;
   border-left: 2px solid var(--border-hi);
   font-size: 12.5px; line-height: 1.45; color: var(--text-soft);
-  display: grid; gap: 6px;
+  display: grid; gap: 6px; overflow-wrap: anywhere;
 }
 .clink { color: var(--accent); text-decoration: none; font-weight: 600; }
 .clink--soft { color: var(--text-soft); font-weight: 600; }
@@ -283,8 +295,7 @@ button { font: inherit; }
 .ava--40 { border-color: var(--gold); }
 .ava--lg { width: 48px; height: 48px; font-size: 16px; }
 .ava--more { border-color: var(--border-hi); color: var(--text-soft); font-size: 10px; }
-.runner-names { font-size: 12.5px; color: var(--text-soft); line-height: 1.35; min-width: 0; }
-.runner-names--none { color: var(--text-muted); font-style: italic; }
+.runner-names { font-size: 12.5px; color: var(--text-soft); line-height: 1.35; min-width: 0; overflow-wrap: anywhere; }
 
 /* ─── Boutons ──────────────────────────────────────────────────────────────── */
 .btn {
@@ -294,6 +305,7 @@ button { font: inherit; }
   color: #ffb37a;
   font-weight: 700; font-size: 13px;
   padding: 9px 13px;
+  min-height: 44px;                      /* cible tactile */
   border-radius: 999px;
   white-space: nowrap;
   transition: background .15s, color .15s, border-color .15s, transform .08s;
@@ -309,12 +321,13 @@ button { font: inherit; }
 .btn--ghost { background: transparent; border-color: var(--border-hi); color: var(--text-soft); font-weight: 600; }
 .btn--ghost:hover { color: var(--text); background: rgba(255,255,255,.05); }
 .btn--sm { padding: 6px 10px; font-size: 12px; }
+.course-side .btn { white-space: normal; text-align: center; }
 .btn--wide { width: 100%; text-align: center; white-space: normal; }
 
 .bloc-actions { margin-top: 10px; display: grid; gap: 8px; }
 .other-form { display: flex; gap: 8px; flex-wrap: wrap; }
 .other-form input {
-  flex: 1 1 180px; min-width: 0;
+  flex: 1 1 180px; min-width: 0; min-height: 44px; font-size: 16px !important;
   background: var(--surface-lo);
   border: 1px solid var(--border-hi);
   color: var(--text);
@@ -324,7 +337,7 @@ button { font: inherit; }
 .other-form input:focus { outline: none; border-color: var(--accent-dim); box-shadow: 0 0 0 3px var(--accent-soft); }
 
 .pending { margin-top: 12px; border-top: 1px solid var(--border); padding-top: 10px; }
-.pending summary { cursor: pointer; color: var(--text-soft); font-size: 13px; font-weight: 600; list-style: none; }
+.pending summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; color: var(--text-soft); font-size: 13px; font-weight: 600; list-style: none; }
 .pending summary::-webkit-details-marker { display: none; }
 .pending summary::before { content: "▸ "; color: var(--text-muted); }
 .pending[open] summary::before { content: "▾ "; }
@@ -346,9 +359,17 @@ button { font: inherit; }
   font-size: 13px; font-weight: 600;
   box-shadow: 0 10px 30px rgba(0,0,0,.5);
   max-width: calc(100vw - 32px);
+  overflow-wrap: anywhere;
   z-index: 50;
 }
 .toast--err { border-color: rgba(255, 92, 92, 0.5); color: #ffb3b3; }
+.toast--action { display: flex; align-items: center; gap: 6px; padding: 4px 4px 4px 16px; }
+.toast-act {
+  appearance: none; cursor: pointer; flex: none;
+  min-height: 44px; padding: 0 16px; border-radius: 999px;
+  border: 1px solid var(--accent-dim); background: var(--accent-soft); color: #ffb37a;
+  font-weight: 800; font-size: 13px;
+}
 
 @media (max-width: 420px) {
   .bloc-head { flex-direction: column; }

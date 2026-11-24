@@ -49,3 +49,15 @@ const OTHER_COURSE = "autre";
 
 /* Rafraîchissement automatique des choix (ms) quand l'onglet est visible. */
 const REFRESH_MS = 90 * 1000;
+
+/* Premier chargement des choix lancé dès le <head> (ce fichier y est chargé en premier) : la
+   requête Apps Script (2-3 s) part pendant que le reste de la page se télécharge. app.js reprend
+   cette promesse au lieu de relancer un fetch. Toujours résolue : { ok:false, error } en cas d'échec. */
+window.__qcoChoices = API_URL ? (function () {
+  const ctrl = new AbortController();
+  const timer = setTimeout(function () { ctrl.abort(); }, 15000);
+  return fetch(API_URL, { cache: "no-store", signal: ctrl.signal })
+    .then(function (res) { return res.json(); })
+    .catch(function (err) { return { ok: false, error: String(err) }; })
+    .finally(function () { clearTimeout(timer); });
+})() : null;
