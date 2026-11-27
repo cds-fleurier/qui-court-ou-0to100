@@ -1,6 +1,7 @@
 # Changelog
 
 ## 1.11.1 — 27 novembre 2026
+- Relevé des inscriptions du bloc Noël (27/11) : **Corrida-Trail Ambarroise 10 et 5 km complètes**, Trail Blanc du Gaschney indiqué complet, Noctrail 939/1 100 (16 km 360 D+, et non 15 km), Trail des Dolines annoncé dim. 20/12 (inscriptions pas encore ouvertes), places restantes / tarifs mis à jour pour les autres.
 - Nouvelle course (bloc Noël, parcours 0 to 100) : **Les Foulées de Noël – 10 km**, sam. 19/12/2026 à 20h, La Talaudière (42), route. Ajoutée à la demande de Charles, qui a demandé d'y inscrire Blandine.
 
 ## 1.11.0 — 24 novembre 2026
