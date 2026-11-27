@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.11.1 — 27 novembre 2026
+- Nouvelle course (bloc Noël, parcours 0 to 100) : **Les Foulées de Noël – 10 km**, sam. 19/12/2026 à 20h, La Talaudière (42), route. Ajoutée à la demande de Charles, qui a demandé d'y inscrire Blandine.
+
 ## 1.11.0 — 24 novembre 2026
 Corrections issues de la revue du 24/11 (sécurité, fiabilité, accessibilité) et chargement plus rapide.
 
