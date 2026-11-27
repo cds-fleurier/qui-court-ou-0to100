@@ -51,7 +51,7 @@ window.COURSES = [
   { id: "trail-de-la-guigne",        bloc: "noel", weekend: "2026-12-26", date: "2026-12-27", name: "Trail de la Guigne",        dept: "14", km: 14, dplus: 160, tracks: ["100"],
     url: "https://chronometrage.com/prices/traildelaguigne-1", signup: { status: "open", note: "ouvertes (chronometrage.com) — dim. 27/12/2026, 14 km à 9h30 : 13 € ; ≈ 610 places libres sur 750 mi-oct. (28/29 km : 25 € jusqu'au 20/11)" } },
 
-  { id: "foulees-de-noel-talaudiere", bloc: "noel", weekend: "2026-12-19", name: "Les Foulées de Noël – 10 km route", format: "route · 2 boucles de 5 km", dept: "42", km: 10, tracks: ["100"],
+  { id: "foulees-de-noel-talaudiere", bloc: "noel", weekend: "2026-12-19", name: "Les Foulées de Noël – route", format: "route · 2 boucles de 5 km", dept: "42", km: 10, tracks: ["100"],
     url: "https://lesfouleesdenoel.fr/course-10-km-la-talaudiere/", signup: { status: "open", note: "ajoutée par Charles le 27/11 (Blandine inscrite) — sam. 19/12/2026 à 20h à La Talaudière, 10 km sur route (2 boucles de 5 km, parcours roulant labellisé FFA, D+ non publié) ; inscriptions sur sportsnconnect, −2 € licenciés FFA ; aussi un 5 km et des courses enfants" } },
   { id: "corrida-tarascon",          bloc: "noel", weekend: "2026-12-19", name: "Corrida de Tarascon – 11,4 km « Le Combiné »", dept: "09", km: 11.4, dplus: 620, tracks: ["100"],
     url: "https://chrono-start.com/Inscription/Course/detail/c/5591", signup: { status: "open", close: "2026-12-18", note: "validée par le staff pour Alice (17/11) — sam. 19/12/2026 à Tarascon-sur-Ariège : « 500 qui pique » (1,9 km / 520 D+, départ 15h) puis Corrida (9,5 km / 100 D+, 3 boucles, départ 17h30) ; combiné 15 € (10 € l'une seule) sur chrono-start, clôture ven. 18/12 à 18h" } },
